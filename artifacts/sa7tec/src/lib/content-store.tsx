@@ -21,6 +21,7 @@ export interface SiteContent {
     heroHeadline: LocalizedString;
     heroSubheadline: LocalizedString;
     aboutText: LocalizedString;
+    heroBackgroundUrl?: string;
   };
   services: Array<{
     id: string;
@@ -36,6 +37,7 @@ export interface SiteContent {
     description: LocalizedString;
     statusBadge: LocalizedString;
     imageUrl: string;
+    screenshots?: string[];
   }>;
   portfolioItems: Array<{
     id: string;
@@ -96,6 +98,7 @@ const DEFAULT_CONTENT: SiteContent = {
       fr: "Nous sommes un jeune studio mobile dédié à la création d'expériences numériques inoubliables.",
       ar: "نحن استوديو شاب لتطوير تطبيقات الجوال نركّز على ابتكار تجارب رقمية لا تُنسى.",
     },
+    heroBackgroundUrl: "/assets/hero-bg.png",
   },
   services: [
     {
@@ -159,6 +162,11 @@ const DEFAULT_CONTENT: SiteContent = {
       },
       statusBadge: { en: "Available Now", fr: "Disponible", ar: "متاحة الآن" },
       imageUrl: "/assets/rubiks-challenge.jpg",
+      screenshots: [
+        "/assets/rubiks-game.jpg",
+        "/assets/rubiks-loading.jpg",
+        "/assets/rubiks-challenge.jpg",
+      ],
     },
   ],
   portfolioItems: [

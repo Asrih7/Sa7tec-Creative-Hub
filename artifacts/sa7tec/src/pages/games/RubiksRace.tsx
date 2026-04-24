@@ -5,16 +5,17 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Star, Trophy, Clock, Zap, Download } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "@/lib/i18n";
+import { useContent } from "@/lib/content-store";
+import { assetSrc } from "@/lib/assets";
 
 export default function RubiksRace() {
   const [activeImage, setActiveImage] = useState(0);
-  const { t } = useLanguage();
+  const { t, tr } = useLanguage();
+  const { content } = useContent();
 
-  const screenshots = [
-    `${import.meta.env.BASE_URL}assets/rubiks-challenge.jpg`,
-    `${import.meta.env.BASE_URL}assets/rubiks-game.jpg`,
-    `${import.meta.env.BASE_URL}assets/rubiks-loading.jpg`,
-  ];
+  const game = content.games[0];
+  const rawShots = (game?.screenshots ?? []).filter(Boolean);
+  const screenshots = (rawShots.length > 0 ? rawShots : [game?.imageUrl].filter(Boolean) as string[]).map(assetSrc);
 
   return (
     <PublicLayout>
@@ -38,18 +39,18 @@ export default function RubiksRace() {
             >
               <div>
                 <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-6">
-                  {t("rubiks.flagship")}
+                  {game ? tr(game.statusBadge) : t("rubiks.flagship")}
                 </div>
                 <h1 className="text-5xl md:text-7xl font-display font-bold leading-tight mb-4">
-                  Rubik's <span className="text-gradient">Race</span>
+                  {game ? tr(game.title) : <span><span>Rubik's </span><span className="text-gradient">Race</span></span>}
                 </h1>
                 <p className="text-2xl font-light text-muted-foreground">
-                  {t("rubiks.subtitle")}
+                  {game ? tr(game.subtitle) : t("rubiks.subtitle")}
                 </p>
               </div>
 
               <p className="text-lg leading-relaxed text-foreground/80">
-                {t("rubiks.desc")}
+                {game ? tr(game.description) : t("rubiks.desc")}
               </p>
 
               <div className="grid grid-cols-2 gap-6 pt-4">

@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useContent } from "@/lib/content-store";
 import { useLanguage } from "@/lib/i18n";
+import { assetSrc } from "@/lib/assets";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronRight, Gamepad2, ShoppingCart, GraduationCap, HeartPulse, Smartphone, Layers, Code, Zap } from "lucide-react";
 
@@ -17,20 +18,26 @@ export default function Home() {
   const heroHeadline = tr(content.siteInfo.heroHeadline);
   const featureKeys = ["section.feat.levels", "section.feat.dark", "section.feat.leaderboards", "section.feat.daily"] as const;
 
+  const game = content.games[0];
+  const screenshots = (game?.screenshots ?? []).filter(Boolean);
+  const shot = (i: number) => assetSrc(screenshots[i] ?? game?.imageUrl);
+
   return (
     <PublicLayout>
       {/* 1. HERO SECTION */}
       <section className="relative min-h-[90vh] flex items-center justify-center pt-20 overflow-hidden">
         <div className="absolute inset-0 bg-[#091223] z-0" />
         
-        <div 
-          className="absolute inset-0 z-0 opacity-40 mix-blend-screen"
-          style={{ 
-            backgroundImage: `url(${import.meta.env.BASE_URL}assets/hero-bg.png)`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+        {content.siteInfo.heroBackgroundUrl ? (
+          <div 
+            className="absolute inset-0 z-0 opacity-40 mix-blend-screen"
+            style={{ 
+              backgroundImage: `url(${assetSrc(content.siteInfo.heroBackgroundUrl)})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        ) : null}
         
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 blur-[150px] rounded-full z-0" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-secondary/20 blur-[150px] rounded-full z-0" />
@@ -137,13 +144,13 @@ export default function Home() {
             >
               <div className="relative h-[600px] w-full max-w-[400px] mx-auto">
                 <div className="absolute top-10 left-[-20px] w-64 aspect-[9/19] rounded-[2.5rem] overflow-hidden border border-white/20 shadow-2xl opacity-60 rotate-[-10deg] blur-[2px] transition-all duration-500 hover:blur-none hover:opacity-100 hover:rotate-[-5deg] hover:z-20">
-                  <img src={`${import.meta.env.BASE_URL}assets/rubiks-loading.jpg`} alt="Loading" className="w-full h-full object-cover" />
+                  {shot(1) ? <img src={shot(1)} alt="" className="w-full h-full object-cover" /> : null}
                 </div>
                 <div className="absolute top-20 right-[-20px] w-64 aspect-[9/19] rounded-[2.5rem] overflow-hidden border border-white/20 shadow-2xl opacity-60 rotate-[10deg] blur-[2px] transition-all duration-500 hover:blur-none hover:opacity-100 hover:rotate-[5deg] hover:z-20">
-                  <img src={`${import.meta.env.BASE_URL}assets/rubiks-game.jpg`} alt="Game" className="w-full h-full object-cover" />
+                  {shot(0) ? <img src={shot(0)} alt="" className="w-full h-full object-cover" /> : null}
                 </div>
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[280px] aspect-[9/19] rounded-[2.5rem] overflow-hidden border border-white/30 shadow-[0_0_50px_-12px_hsl(var(--secondary))] z-10">
-                  <img src={`${import.meta.env.BASE_URL}assets/rubiks-challenge.jpg`} alt="Challenge" className="w-full h-full object-cover" />
+                  {shot(2) ? <img src={shot(2)} alt="" className="w-full h-full object-cover" /> : null}
                 </div>
               </div>
             </motion.div>
@@ -154,13 +161,13 @@ export default function Home() {
               viewport={{ once: true }}
             >
               <div className="inline-flex items-center rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-sm font-medium text-secondary mb-6 glow-violet">
-                {t("section.flagship_badge")}
+                {game ? tr(game.statusBadge) : t("section.flagship_badge")}
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
-                Rubik's <span className="text-gradient">Race</span>
+                {game ? tr(game.title) : <span><span>Rubik's </span><span className="text-gradient">Race</span></span>}
               </h2>
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                {t("section.flagship_desc")}
+                {game ? tr(game.description) : t("section.flagship_desc")}
               </p>
               
               <ul className="space-y-4 mb-10">
@@ -205,11 +212,13 @@ export default function Home() {
               >
                 <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden mb-6 bg-card border border-border">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <img 
-                    src={`${import.meta.env.BASE_URL}${item.imageUrl.replace('/assets/', 'assets/')}`} 
-                    alt={tr(item.title)} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                  {item.imageUrl ? (
+                    <img 
+                      src={assetSrc(item.imageUrl)} 
+                      alt={tr(item.title)} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : null}
                   <div className="absolute bottom-6 left-6 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-4 group-hover:translate-y-0">
                     <Button variant="secondary" size="sm" className="rounded-full rounded-b-none bg-primary/90 text-white hover:bg-primary">
                       {t("section.portfolio_view")}

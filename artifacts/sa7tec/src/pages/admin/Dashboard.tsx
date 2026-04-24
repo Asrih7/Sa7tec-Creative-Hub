@@ -10,6 +10,13 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Save, Trash2, Download } from "lucide-react";
 import { LocalizedField } from "@/components/admin/LocalizedField";
+import { ServicesEditor } from "@/components/admin/ServicesEditor";
+import { PortfolioEditor } from "@/components/admin/PortfolioEditor";
+import { GameEditor } from "@/components/admin/GameEditor";
+import { StatsEditor } from "@/components/admin/StatsEditor";
+import { ProcessEditor } from "@/components/admin/ProcessEditor";
+import { TestimonialsEditor } from "@/components/admin/TestimonialsEditor";
+import { MediaEditor } from "@/components/admin/MediaEditor";
 import { ADMIN_CONFIG } from "@/lib/admin-config";
 
 export default function Dashboard() {
@@ -72,6 +79,13 @@ export default function Dashboard() {
         <Tabs defaultValue="general" className="space-y-6">
           <TabsList className="bg-zinc-900 border-zinc-800 flex-wrap h-auto">
             <TabsTrigger value="general">{t("admin.tab.general")}</TabsTrigger>
+            <TabsTrigger value="services">{t("admin.tab.services")}</TabsTrigger>
+            <TabsTrigger value="portfolio">{t("admin.tab.portfolio")}</TabsTrigger>
+            <TabsTrigger value="game">{t("admin.tab.game")}</TabsTrigger>
+            <TabsTrigger value="stats">{t("admin.tab.stats")}</TabsTrigger>
+            <TabsTrigger value="process">{t("admin.tab.process")}</TabsTrigger>
+            <TabsTrigger value="testimonials">{t("admin.tab.testimonials")}</TabsTrigger>
+            <TabsTrigger value="media">{t("admin.tab.media")}</TabsTrigger>
             <TabsTrigger value="contact">{t("admin.tab.contact")}</TabsTrigger>
             <TabsTrigger value="submissions">
               {t("admin.tab.submissions")} ({content.submissions.length})
@@ -122,10 +136,38 @@ export default function Dashboard() {
                 />
 
                 <Button onClick={handleSaveSiteInfo} className="mt-4">
-                  <Save className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2" /> {t("admin.save")}
+                  <Save className="w-4 h-4 me-2" /> {t("admin.save")}
                 </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="services" className="space-y-6">
+            <ServicesEditor />
+          </TabsContent>
+
+          <TabsContent value="portfolio" className="space-y-6">
+            <PortfolioEditor />
+          </TabsContent>
+
+          <TabsContent value="game" className="space-y-6">
+            <GameEditor />
+          </TabsContent>
+
+          <TabsContent value="stats" className="space-y-6">
+            <StatsEditor />
+          </TabsContent>
+
+          <TabsContent value="process" className="space-y-6">
+            <ProcessEditor />
+          </TabsContent>
+
+          <TabsContent value="testimonials" className="space-y-6">
+            <TestimonialsEditor />
+          </TabsContent>
+
+          <TabsContent value="media" className="space-y-6">
+            <MediaEditor />
           </TabsContent>
 
           <TabsContent value="contact" className="space-y-6">
@@ -148,6 +190,15 @@ export default function Dashboard() {
                   <Input
                     value={contactInfo.phone}
                     onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+                    className="bg-zinc-950 border-zinc-800"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>{t("admin.field.whatsapp")}</Label>
+                  <Input
+                    value={contactInfo.whatsapp}
+                    onChange={(e) => setContactInfo({ ...contactInfo, whatsapp: e.target.value })}
+                    placeholder="+15551234567"
                     className="bg-zinc-950 border-zinc-800"
                   />
                 </div>
@@ -179,9 +230,29 @@ export default function Dashboard() {
                     className="bg-zinc-950 border-zinc-800"
                   />
                 </div>
+                <div className="grid gap-2">
+                  <Label>{t("admin.field.instagram")}</Label>
+                  <Input
+                    value={contactInfo.social.instagram}
+                    onChange={(e) =>
+                      setContactInfo({ ...contactInfo, social: { ...contactInfo.social, instagram: e.target.value } })
+                    }
+                    className="bg-zinc-950 border-zinc-800"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>{t("admin.field.github")}</Label>
+                  <Input
+                    value={contactInfo.social.github}
+                    onChange={(e) =>
+                      setContactInfo({ ...contactInfo, social: { ...contactInfo.social, github: e.target.value } })
+                    }
+                    className="bg-zinc-950 border-zinc-800"
+                  />
+                </div>
 
                 <Button onClick={handleSaveContactInfo} className="mt-4">
-                  <Save className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2" /> {t("admin.save")}
+                  <Save className="w-4 h-4 me-2" /> {t("admin.save")}
                 </Button>
               </CardContent>
             </Card>
@@ -195,7 +266,7 @@ export default function Dashboard() {
                   <CardDescription>{t("admin.submissions_sub")}</CardDescription>
                 </div>
                 <Button variant="outline" onClick={handleExportSubmissions} disabled={content.submissions.length === 0}>
-                  <Download className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2" /> {t("admin.export_json")}
+                  <Download className="w-4 h-4 me-2" /> {t("admin.export_json")}
                 </Button>
               </CardHeader>
               <CardContent>
@@ -205,7 +276,7 @@ export default function Dashboard() {
                   <div className="space-y-4">
                     {content.submissions.map((sub) => (
                       <div key={sub.id} className="p-4 rounded-lg bg-zinc-950 border border-zinc-800 relative group">
-                        <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute top-4 end-4 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button variant="destructive" size="icon" onClick={() => deleteSubmission(sub.id)}>
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -286,7 +357,7 @@ export default function Dashboard() {
                     />
                   </div>
                   <Button type="submit" className="mt-2">
-                    <Save className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2" /> {t("admin.update_password")}
+                    <Save className="w-4 h-4 me-2" /> {t("admin.update_password")}
                   </Button>
                 </form>
               </CardContent>

@@ -21,7 +21,7 @@ The site is a single-page React app with a hidden admin panel. There is no backe
 ## Hidden admin
 
 - `/admin` — password login (NOT linked in any nav)
-- `/admin/dashboard` — full content editor (site info, services, games, portfolio, testimonials, stats, process, contact info, view/export contact submissions, change password, logout)
+- `/admin/dashboard` — full content editor with tabs for: General (site title, tagline, hero copy, about), Services (add/reorder/delete with icon + color picker), Portfolio (with image upload), Flagship Game (title, copy, hero image, multiple screenshots), Stats (label + value), Process steps, Testimonials (with avatar upload), Media (hero background image), Contact (email, phone, WhatsApp, address, Twitter/LinkedIn/Instagram/GitHub URLs), Submissions (view/delete/export JSON), Password (change admin password). Image uploads are stored as base64 inside the same browser-storage content blob.
 
 **Default admin password:** `sa7tec2026`
 The password is stored in `localStorage` under `sa7tec_admin_pwd` and can be changed from the dashboard.
