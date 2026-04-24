@@ -2,12 +2,14 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Play, Star, Trophy, Clock, Zap, Download } from "lucide-react";
+import { ArrowLeft, Star, Trophy, Clock, Zap, Download } from "lucide-react";
 import { Link } from "wouter";
+import { useLanguage } from "@/lib/i18n";
 
 export default function RubiksRace() {
   const [activeImage, setActiveImage] = useState(0);
-  
+  const { t } = useLanguage();
+
   const screenshots = [
     `${import.meta.env.BASE_URL}assets/rubiks-challenge.jpg`,
     `${import.meta.env.BASE_URL}assets/rubiks-game.jpg`,
@@ -17,7 +19,6 @@ export default function RubiksRace() {
   return (
     <PublicLayout>
       <div className="pt-24 pb-10 bg-background relative overflow-hidden">
-        {/* Background Mesh */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary/40 blur-[120px] rounded-full mix-blend-screen" />
           <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-secondary/40 blur-[120px] rounded-full mix-blend-screen" />
@@ -25,12 +26,11 @@ export default function RubiksRace() {
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
+            <ArrowLeft className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2 rtl:rotate-180" />
+            {t("rubiks.back")}
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Content */}
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -38,18 +38,18 @@ export default function RubiksRace() {
             >
               <div>
                 <div className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-medium text-primary mb-6">
-                  Flagship Title
+                  {t("rubiks.flagship")}
                 </div>
                 <h1 className="text-5xl md:text-7xl font-display font-bold leading-tight mb-4">
                   Rubik's <span className="text-gradient">Race</span>
                 </h1>
                 <p className="text-2xl font-light text-muted-foreground">
-                  The Ultimate Puzzle Challenge
+                  {t("rubiks.subtitle")}
                 </p>
               </div>
 
               <p className="text-lg leading-relaxed text-foreground/80">
-                Dive into a vibrant world of speed and strategy. Rubik's Race brings the classic puzzle mechanics to your fingertips with over 5,000 uniquely crafted levels, neon-soaked visuals, and heart-pounding time attacks.
+                {t("rubiks.desc")}
               </p>
 
               <div className="grid grid-cols-2 gap-6 pt-4">
@@ -58,8 +58,8 @@ export default function RubiksRace() {
                     <Trophy className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg">5,000+</h4>
-                    <p className="text-sm text-muted-foreground">Unique Levels</p>
+                    <h4 className="font-bold text-lg" dir="ltr">5,000+</h4>
+                    <p className="text-sm text-muted-foreground">{t("rubiks.levels")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -67,8 +67,8 @@ export default function RubiksRace() {
                     <Clock className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg">Time Attack</h4>
-                    <p className="text-sm text-muted-foreground">Global Leaderboards</p>
+                    <h4 className="font-bold text-lg">{t("rubiks.time_attack")}</h4>
+                    <p className="text-sm text-muted-foreground">{t("rubiks.global_lb")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -76,8 +76,8 @@ export default function RubiksRace() {
                     <Zap className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg">60 FPS</h4>
-                    <p className="text-sm text-muted-foreground">Smooth Gameplay</p>
+                    <h4 className="font-bold text-lg" dir="ltr">60 FPS</h4>
+                    <p className="text-sm text-muted-foreground">{t("rubiks.smooth")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -85,25 +85,24 @@ export default function RubiksRace() {
                     <Star className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg">Daily</h4>
-                    <p className="text-sm text-muted-foreground">Special Challenges</p>
+                    <h4 className="font-bold text-lg">{t("rubiks.daily")}</h4>
+                    <p className="text-sm text-muted-foreground">{t("rubiks.special")}</p>
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-8">
                 <Button size="lg" className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-full glow-cyan w-full sm:w-auto" disabled>
-                  <Download className="w-5 h-5 mr-2" />
-                  Coming Soon to iOS
+                  <Download className="w-5 h-5 mr-2 rtl:mr-0 rtl:ml-2" />
+                  {t("rubiks.coming_ios")}
                 </Button>
                 <Button size="lg" variant="outline" className="h-14 px-8 rounded-full border-border hover:bg-white/5 w-full sm:w-auto" disabled>
-                  <Download className="w-5 h-5 mr-2" />
-                  Coming Soon to Android
+                  <Download className="w-5 h-5 mr-2 rtl:mr-0 rtl:ml-2" />
+                  {t("rubiks.coming_android")}
                 </Button>
               </div>
             </motion.div>
 
-            {/* Right Media Gallery */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -111,7 +110,6 @@ export default function RubiksRace() {
               className="relative"
             >
               <div className="relative aspect-[9/19] max-w-[320px] mx-auto rounded-[3rem] p-3 glass-panel border border-white/10 glow-violet shadow-2xl">
-                {/* Phone frame details */}
                 <div className="absolute top-0 inset-x-0 h-6 flex justify-center">
                   <div className="w-32 h-6 bg-black rounded-b-3xl"></div>
                 </div>
@@ -132,7 +130,6 @@ export default function RubiksRace() {
                 </div>
               </div>
 
-              {/* Thumbnail Selector */}
               <div className="flex justify-center gap-4 mt-8">
                 {screenshots.map((src, idx) => (
                   <button

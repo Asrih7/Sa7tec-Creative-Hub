@@ -5,6 +5,7 @@ import * as z from "zod";
 import { motion } from "framer-motion";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { useContent } from "@/lib/content-store";
+import { useLanguage } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,18 +14,19 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { CheckCircle2, MapPin, Phone, Mail, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  projectType: z.string().min(1, "Please select a project type"),
-  budgetRange: z.string().min(1, "Please select a budget range"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
 export default function Contact() {
   const { content, addSubmission } = useContent();
   const { toast } = useToast();
+  const { t, tr } = useLanguage();
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const formSchema = z.object({
+    name: z.string().min(2, t("contact.err_name")),
+    email: z.string().email(t("contact.err_email")),
+    projectType: z.string().min(1, t("contact.err_project")),
+    budgetRange: z.string().min(1, t("contact.err_budget")),
+    message: z.string().min(10, t("contact.err_message")),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,15 +43,14 @@ export default function Contact() {
     addSubmission(values);
     setIsSubmitted(true);
     toast({
-      title: "Message sent!",
-      description: "We'll get back to you as soon as possible.",
+      title: t("contact.toast_sent"),
+      description: t("contact.toast_sent_desc"),
     });
   }
 
   return (
     <PublicLayout>
       <div className="pt-32 pb-20 relative overflow-hidden">
-        {/* Background Elements */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/10 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary/10 blur-[100px] rounded-full pointer-events-none translate-y-1/3 -translate-x-1/3" />
 
@@ -60,7 +61,7 @@ export default function Contact() {
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl md:text-6xl font-display font-bold mb-6 text-foreground"
             >
-              Let's Build Something <span className="text-gradient">Extraordinary</span>
+              {t("contact.title_a")} <span className="text-gradient">{t("contact.title_b")}</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -68,12 +69,11 @@ export default function Contact() {
               transition={{ delay: 0.1 }}
               className="text-xl text-muted-foreground"
             >
-              Have a project in mind? We'd love to hear about it. Fill out the form below and our team will get back to you within 24 hours.
+              {t("contact.subtitle")}
             </motion.p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-            {/* Contact Info */}
             <div className="lg:col-span-1 space-y-8">
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
@@ -81,7 +81,7 @@ export default function Contact() {
                 transition={{ delay: 0.2 }}
                 className="glass-panel p-8 rounded-3xl"
               >
-                <h3 className="text-2xl font-display font-semibold mb-6">Contact Information</h3>
+                <h3 className="text-2xl font-display font-semibold mb-6">{t("contact.info")}</h3>
                 
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
@@ -89,7 +89,7 @@ export default function Contact() {
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Email Us</p>
+                      <p className="text-sm text-muted-foreground mb-1">{t("contact.email_us")}</p>
                       <a href={`mailto:${content.contactInfo.email}`} className="text-lg font-medium hover:text-primary transition-colors">
                         {content.contactInfo.email}
                       </a>
@@ -101,8 +101,8 @@ export default function Contact() {
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Call Us</p>
-                      <a href={`tel:${content.contactInfo.phone}`} className="text-lg font-medium hover:text-secondary transition-colors">
+                      <p className="text-sm text-muted-foreground mb-1">{t("contact.call_us")}</p>
+                      <a href={`tel:${content.contactInfo.phone}`} dir="ltr" className="text-lg font-medium hover:text-secondary transition-colors">
                         {content.contactInfo.phone}
                       </a>
                     </div>
@@ -113,9 +113,9 @@ export default function Contact() {
                       <MapPin className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground mb-1">Visit Us</p>
+                      <p className="text-sm text-muted-foreground mb-1">{t("contact.visit_us")}</p>
                       <p className="text-lg font-medium">
-                        {content.contactInfo.address}
+                        {tr(content.contactInfo.address)}
                       </p>
                     </div>
                   </div>
@@ -123,7 +123,6 @@ export default function Contact() {
               </motion.div>
             </div>
 
-            {/* Contact Form */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -139,9 +138,9 @@ export default function Contact() {
                   <div className="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-6 glow-cyan">
                     <CheckCircle2 className="w-12 h-12" />
                   </div>
-                  <h3 className="text-3xl font-display font-bold mb-4">Message Received!</h3>
+                  <h3 className="text-3xl font-display font-bold mb-4">{t("contact.success_title")}</h3>
                   <p className="text-muted-foreground text-lg mb-8 max-w-md">
-                    Thank you for reaching out. Our team is reviewing your project details and will be in touch shortly.
+                    {t("contact.success_desc")}
                   </p>
                   <Button 
                     onClick={() => {
@@ -151,7 +150,7 @@ export default function Contact() {
                     variant="outline"
                     className="rounded-full px-8 border-primary/20 hover:bg-primary/10"
                   >
-                    Send Another Message
+                    {t("contact.send_another")}
                   </Button>
                 </motion.div>
               ) : (
@@ -163,9 +162,9 @@ export default function Contact() {
                         name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-foreground/80">Full Name</FormLabel>
+                            <FormLabel className="text-foreground/80">{t("contact.full_name")}</FormLabel>
                             <FormControl>
-                              <Input placeholder="John Doe" className="bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20" {...field} />
+                              <Input placeholder={t("contact.placeholder_name")} className="bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -176,9 +175,9 @@ export default function Contact() {
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-foreground/80">Email Address</FormLabel>
+                            <FormLabel className="text-foreground/80">{t("contact.email")}</FormLabel>
                             <FormControl>
-                              <Input placeholder="john@example.com" type="email" className="bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20" {...field} />
+                              <Input placeholder={t("contact.placeholder_email")} type="email" dir="ltr" className="bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -192,18 +191,19 @@ export default function Contact() {
                         name="projectType"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-foreground/80">Project Type</FormLabel>
+                            <FormLabel className="text-foreground/80">{t("contact.project_type")}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger className="bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20">
-                                  <SelectValue placeholder="Select a service" />
+                                  <SelectValue placeholder={t("contact.placeholder_select_service")} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {content.services.map(s => (
-                                  <SelectItem key={s.id} value={s.title}>{s.title}</SelectItem>
-                                ))}
-                                <SelectItem value="Other">Other Custom App</SelectItem>
+                                {content.services.map(s => {
+                                  const label = tr(s.title);
+                                  return <SelectItem key={s.id} value={label}>{label}</SelectItem>;
+                                })}
+                                <SelectItem value="Other">{t("contact.other")}</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -215,11 +215,11 @@ export default function Contact() {
                         name="budgetRange"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-foreground/80">Budget Range</FormLabel>
+                            <FormLabel className="text-foreground/80">{t("contact.budget")}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger className="bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20">
-                                  <SelectValue placeholder="Select range" />
+                                  <SelectValue placeholder={t("contact.placeholder_select_range")} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -240,10 +240,10 @@ export default function Contact() {
                       name="message"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-foreground/80">Project Details</FormLabel>
+                          <FormLabel className="text-foreground/80">{t("contact.message")}</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Tell us about your project, goals, and timeline..." 
+                              placeholder={t("contact.placeholder_message")} 
                               className="min-h-[150px] bg-background/50 border-border/50 focus:border-primary focus:ring-primary/20 resize-none" 
                               {...field} 
                             />
@@ -254,8 +254,8 @@ export default function Contact() {
                     />
 
                     <Button type="submit" size="lg" className="w-full sm:w-auto px-10 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-full glow-cyan mt-4">
-                      <MessageSquare className="w-5 h-5 mr-2" />
-                      Send Message
+                      <MessageSquare className="w-5 h-5 mr-2 rtl:mr-0 rtl:ml-2" />
+                      {t("contact.send")}
                     </Button>
                   </form>
                 </Form>

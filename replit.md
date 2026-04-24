@@ -29,6 +29,16 @@ Session token is kept in `sessionStorage` so login expires when the browser clos
 
 All site content is stored in `localStorage` under `sa7tec_content_v1` via `src/lib/content-store.tsx`.
 
+## Languages (i18n)
+
+The site supports **English / French / Arabic** via `src/lib/i18n.tsx`:
+- Language switcher (globe icon) in the public header and admin top bar.
+- Selected language persists to `localStorage` under `sa7tec_lang`.
+- Arabic auto-applies `dir="rtl"` to `<html>` and switches the font stack to Noto Sans/Kufi Arabic.
+- Static UI strings live in the `STRINGS` dictionary (`useLanguage().t(key)`).
+- Admin-editable text fields use the `LocalizedString` type (`string | { en, fr?, ar? }`); pages render them with `useLanguage().tr(value)`.
+- The admin dashboard exposes EN/FR/AR tabs per translatable text field via `<LocalizedField>`.
+
 ## Stack
 
 - pnpm workspace monorepo, Node 24, TypeScript 5.9

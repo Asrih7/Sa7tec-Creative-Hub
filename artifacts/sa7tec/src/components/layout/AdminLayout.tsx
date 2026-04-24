@@ -1,13 +1,15 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, LogOut, Settings, MessageSquare, LayoutTemplate, Briefcase, FileImage, Quote, BarChart2, Hexagon } from "lucide-react";
+import { LayoutDashboard, LogOut, Hexagon } from "lucide-react";
 import { useAuth } from "@/lib/admin-auth";
+import { useLanguage } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export function AdminLayout({ children }: { children: ReactNode }) {
   const [location, setLocation] = useLocation();
   const { logout } = useAuth();
+  const { t } = useLanguage();
 
   const handleLogout = () => {
     logout();
@@ -15,8 +17,8 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   };
 
   const navItems = [
-    { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
-    { name: "Back to Site", path: "/", icon: Hexagon },
+    { name: t("admin.dashboard"), path: "/admin/dashboard", icon: LayoutDashboard },
+    { name: t("admin.back_to_site"), path: "/", icon: Hexagon },
   ];
 
   return (
@@ -26,7 +28,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
         <div className="h-16 flex items-center px-6 border-b border-zinc-800">
           <Link href="/admin/dashboard" className="flex items-center gap-2 text-white">
             <Hexagon className="w-5 h-5 text-primary" />
-            <span className="font-display font-bold tracking-tight">SA7TEC Admin</span>
+            <span className="font-display font-bold tracking-tight">{t("admin.title")}</span>
           </Link>
         </div>
         
@@ -37,7 +39,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
               const isActive = location === item.path;
               return (
                 <Link
-                  key={item.name}
+                  key={item.path}
                   href={item.path}
                   className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive 
@@ -60,7 +62,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             onClick={handleLogout}
           >
             <LogOut className="w-4 h-4 mr-2" />
-            Log Out
+            {t("admin.log_out")}
           </Button>
         </div>
       </aside>
@@ -68,9 +70,10 @@ export function AdminLayout({ children }: { children: ReactNode }) {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="h-16 flex items-center justify-between px-8 border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-sm z-10 sticky top-0">
-          <h1 className="font-display font-semibold text-lg">Control Panel</h1>
+          <h1 className="font-display font-semibold text-lg">{t("admin.control_panel")}</h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-zinc-500">Logged in as Administrator</span>
+            <LanguageSwitcher variant="admin" />
+            <span className="text-sm text-zinc-500 hidden md:inline">{t("admin.logged_in_as")}</span>
           </div>
         </header>
         

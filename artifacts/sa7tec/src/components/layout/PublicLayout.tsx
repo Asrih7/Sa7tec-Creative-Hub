@@ -1,14 +1,17 @@
 import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronRight, Hexagon, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronRight, Hexagon } from "lucide-react";
 import { useContent } from "@/lib/content-store";
+import { useLanguage } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export function PublicLayout({ children }: { children: ReactNode }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { content } = useContent();
+  const { t, tr } = useLanguage();
   const [location] = useLocation();
 
   useEffect(() => {
@@ -20,9 +23,9 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   }, []);
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Games", path: "/games/rubiks-race" },
-    { name: "Contact", path: "/contact" },
+    { name: t("nav.home"), path: "/" },
+    { name: t("nav.games"), path: "/games/rubiks-race" },
+    { name: t("nav.contact"), path: "/contact" },
   ];
 
   return (
@@ -40,7 +43,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex flex-col">
               <span className="font-display font-bold text-xl leading-none tracking-tight text-foreground">{content.siteInfo.title}</span>
-              <span className="text-[10px] font-medium text-primary uppercase tracking-widest leading-none mt-0.5">{content.siteInfo.tagline}</span>
+              <span className="text-[10px] font-medium text-primary uppercase tracking-widest leading-none mt-0.5">{tr(content.siteInfo.tagline)}</span>
             </div>
           </Link>
 
@@ -48,7 +51,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
-                key={link.name}
+                key={link.path}
                 href={link.path}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   location === link.path ? "text-primary" : "text-muted-foreground"
@@ -57,20 +60,25 @@ export function PublicLayout({ children }: { children: ReactNode }) {
                 {link.name}
               </Link>
             ))}
+            <LanguageSwitcher variant="header" />
             <Link href="/contact">
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 rounded-full shadow-[0_0_15px_-3px_hsl(var(--primary))] hover:shadow-[0_0_25px_-3px_hsl(var(--primary))] transition-all duration-300">
-                Start Project
+                {t("cta.start_project")}
               </Button>
             </Link>
           </nav>
 
           {/* Mobile Menu Toggle */}
-          <button
-            className="md:hidden p-2 text-foreground"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <LanguageSwitcher variant="header" />
+            <button
+              className="p-2 text-foreground"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -86,7 +94,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             <nav className="flex flex-col gap-6 text-2xl font-display font-semibold">
               {navLinks.map((link) => (
                 <Link
-                  key={link.name}
+                  key={link.path}
                   href={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center justify-between border-b border-border pb-4 ${
@@ -100,7 +108,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               <div className="pt-4">
                 <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button size="lg" className="w-full bg-primary text-primary-foreground rounded-full text-lg h-14">
-                    Start Your Project
+                    {t("cta.start_your_project")}
                   </Button>
                 </Link>
               </div>
@@ -130,7 +138,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
                 </div>
               </Link>
               <p className="text-muted-foreground max-w-md text-lg leading-relaxed mb-8">
-                {content.siteInfo.aboutText}
+                {tr(content.siteInfo.aboutText)}
               </p>
               <div className="flex gap-4">
                 <a href={content.contactInfo.social.twitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-colors">
@@ -149,29 +157,29 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             </div>
             
             <div>
-              <h4 className="font-display font-semibold text-lg mb-6 text-foreground">Explore</h4>
+              <h4 className="font-display font-semibold text-lg mb-6 text-foreground">{t("footer.explore")}</h4>
               <ul className="space-y-3">
-                <li><Link href="/" className="text-muted-foreground hover:text-primary transition-colors">Home</Link></li>
-                <li><Link href="/games/rubiks-race" className="text-muted-foreground hover:text-primary transition-colors">Games</Link></li>
-                <li><Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
+                <li><Link href="/" className="text-muted-foreground hover:text-primary transition-colors">{t("nav.home")}</Link></li>
+                <li><Link href="/games/rubiks-race" className="text-muted-foreground hover:text-primary transition-colors">{t("nav.games")}</Link></li>
+                <li><Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">{t("nav.contact")}</Link></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-display font-semibold text-lg mb-6 text-foreground">Contact</h4>
+              <h4 className="font-display font-semibold text-lg mb-6 text-foreground">{t("footer.contact")}</h4>
               <ul className="space-y-3 text-muted-foreground">
                 <li className="hover:text-foreground transition-colors"><a href={`mailto:${content.contactInfo.email}`}>{content.contactInfo.email}</a></li>
-                <li className="hover:text-foreground transition-colors"><a href={`tel:${content.contactInfo.phone}`}>{content.contactInfo.phone}</a></li>
-                <li>{content.contactInfo.address}</li>
+                <li className="hover:text-foreground transition-colors"><a href={`tel:${content.contactInfo.phone}`} dir="ltr">{content.contactInfo.phone}</a></li>
+                <li>{tr(content.contactInfo.address)}</li>
               </ul>
             </div>
           </div>
           
           <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} SA7TEC Studio. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} SA7TEC Studio. {t("footer.rights")}</p>
             <div className="mt-4 md:mt-0 flex gap-6">
-              <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-foreground transition-colors">{t("footer.privacy")}</a>
+              <a href="#" className="hover:text-foreground transition-colors">{t("footer.terms")}</a>
             </div>
           </div>
         </div>

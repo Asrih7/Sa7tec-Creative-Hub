@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { ContentProvider } from "@/lib/content-store";
 import { AuthProvider, RequireAuth } from "@/lib/admin-auth";
+import { LanguageProvider } from "@/lib/i18n";
 import { useEffect } from "react";
 
 import Home from "@/pages/Home";
@@ -21,7 +22,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/contact" component={Contact} />
       <Route path="/games/rubiks-race" component={RubiksRace} />
-      
+
       <Route path="/admin" component={AdminLogin} />
       <Route path="/admin/dashboard">
         <RequireAuth>
@@ -41,16 +42,18 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ContentProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </TooltipProvider>
-        </AuthProvider>
-      </ContentProvider>
+      <LanguageProvider>
+        <ContentProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                <Router />
+              </WouterRouter>
+              <Toaster />
+            </TooltipProvider>
+          </AuthProvider>
+        </ContentProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
