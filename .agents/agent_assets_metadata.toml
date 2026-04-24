@@ -1,0 +1,26 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "duG2l-Ke-2onaFomia3WU"
+uri = "file://artifacts/sa7tec/public/assets/hero-bg.png"
+type = "image"
+title = "Futuristic hexagonal mesh background"
+
+[[generated]]
+id = "Ya0YHWLNkDK_9EuwFno87"
+uri = "file://artifacts/sa7tec/public/assets/portfolio-ecommerce.png"
+type = "image"
+title = "E-commerce app UI mockup"
+
+[[generated]]
+id = "-Cd0cOycGcg2mGhZ4Ev8a"
+uri = "file://artifacts/sa7tec/public/assets/portfolio-education.png"
+type = "image"
+title = "Education app UI mockup"
+
+[[generated]]
+id = "OHpQ5Mu7jZQEN9hn4I16h"
+uri = "file://artifacts/sa7tec/public/assets/portfolio-health.png"
+type = "image"
+title = "Health fitness app mockup"
