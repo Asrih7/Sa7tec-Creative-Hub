@@ -1,0 +1,111 @@
+<div class="ai-page">
+  <div class="left">
+    <div class="card inputs">
+      <h3>AI inputs</h3>
+      <p class="sub">Pick a plot, then override soil moisture, temperature and market demand to see how the recommendation adapts.</p>
+
+      <div class="plot-pills">
+        @for (p of plots(); track p.id) {
+          <button class="pill" [class.active]="p.id === selectedId()" (click)="selectPlot(p.id)" [attr.data-status]="p.status">
+            <span class="d"></span>
+            {{ p.name }}
+            <small>{{ p.crop }}</small>
+          </button>
+        }
+      </div>
+
+      <div class="slider-block">
+        <label>Soil moisture<span>{{ moisture() }}%</span></label>
+        <mat-slider min="10" max="90" step="1" discrete>
+          <input matSliderThumb [value]="moisture()"
+                 (valueChange)="moisture.set($event); recompute()" />
+        </mat-slider>
+      </div>
+      <div class="slider-block">
+        <label>Air temperature<span>{{ temperature() }}°C</span></label>
+        <mat-slider min="12" max="42" step="1" discrete>
+          <input matSliderThumb [value]="temperature()"
+                 (valueChange)="temperature.set($event); recompute()" />
+        </mat-slider>
+      </div>
+      <div class="slider-block">
+        <label>Market demand<span>{{ demand() }}%</span></label>
+        <mat-slider min="10" max="100" step="1" discrete>
+          <input matSliderThumb [value]="demand()"
+                 (valueChange)="demand.set($event); recompute()" />
+        </mat-slider>
+      </div>
+
+      <button mat-flat-button color="primary" (click)="recompute()" class="run">
+        <mat-icon>auto_awesome</mat-icon> Re-run AI
+      </button>
+    </div>
+
+    <div class="card explain" @think>
+      <h3>Why this recommendation?</h3>
+      <p class="sub">Each factor below feeds the explainable model. High-impact factors are highlighted.</p>
+      <div class="factors">
+        @for (f of factors(); track f.label) {
+          <div class="factor" [attr.data-weight]="f.weight">
+            <mat-icon>{{ f.icon }}</mat-icon>
+            <div>
+              <div class="row">
+                <strong>{{ f.label }}</strong>
+                <span class="value">{{ f.value }}</span>
+              </div>
+              <small>{{ f.impact }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="right" data-tour="ai-card">
+    @if (computing()) {
+      <div class="card thinking">
+        <div class="thinking-anim">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <span>AI cross-referencing satellite, soil, weather and market…</span>
+      </div>
+    }
+
+    @if (showResult()) {
+      <div class="card result">
+        <div class="result-head">
+          <span class="badge"><mat-icon>auto_awesome</mat-icon> AI recommendation</span>
+          <span class="confidence" [class.high]="result().confidence > 80">{{ result().confidence }}% confidence</span>
+        </div>
+        <h2>{{ result().cropChoice }} <small>for {{ selected().name }}</small></h2>
+        <p class="rationale">
+          @if (result().stress) { Soil moisture is critical — start irrigation cycle, then plant. }
+          @else if (result().heat) { Heat conditions suggest a hardier crop. }
+          @else { Conditions favour the current crop. Maintain rotation plan. }
+        </p>
+
+        <div class="grid">
+          <div class="chip-card"><mat-icon>schedule</mat-icon><div><span>Recommended planting</span><strong>{{ result().planting }}</strong></div></div>
+          <div class="chip-card"><mat-icon>scale</mat-icon><div><span>Yield estimate</span><strong>{{ result().yieldEst }} t/ha</strong></div></div>
+          <div class="chip-card"><mat-icon>water_drop</mat-icon><div><span>Water budget</span><strong>{{ result().water }} m³ / cycle</strong></div></div>
+          <div class="chip-card"><mat-icon>bolt</mat-icon><div><span>Action</span><strong>{{ result().stress ? 'Activate irrigation' : 'Maintain plan' }}</strong></div></div>
+        </div>
+
+        <div class="confidence-bar">
+          <span>Model confidence</span>
+          <div class="bar"><div [style.width.%]="result().confidence"></div></div>
+        </div>
+      </div>
+
+      <div class="card model-info">
+        <strong>Model: AgriGrid-AI v2.4</strong>
+        <p>Hybrid gradient-boosted decision tree + LSTM trained on 12 seasons of cooperative data, satellite revisits and weather records. Outputs are explainable per factor.</p>
+        <div class="model-stats">
+          <div><span>Training data</span><strong>4.7M rows</strong></div>
+          <div><span>Update cadence</span><strong>weekly</strong></div>
+          <div><span>F1-score</span><strong>0.89</strong></div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

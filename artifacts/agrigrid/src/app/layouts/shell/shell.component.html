@@ -1,0 +1,83 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav mode="side" opened [class.collapsed]="collapsed()" class="side">
+    <div class="brand" (click)="goLanding()" role="button">
+      <div class="logo">
+        <svg viewBox="0 0 64 64" width="32" height="32">
+          <defs>
+            <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#22c55e"/>
+              <stop offset="1" stop-color="#0ea5e9"/>
+            </linearGradient>
+          </defs>
+          <rect width="64" height="64" rx="14" fill="url(#lg)"/>
+          <path d="M32 12 C24 18 18 26 18 36 c0 9 6 14 14 14 s14-5 14-14 c0-10-6-18-14-24z" fill="#fff" opacity=".9"/>
+          <path d="M32 22 v24 M22 36 q10 -10 20 0" stroke="#16a34a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      @if (!collapsed()) {
+        <div class="brand-text">
+          <span class="name">AgriGrid</span>
+          <span class="tag">Smart Agriculture</span>
+        </div>
+      }
+    </div>
+
+    <nav class="nav">
+      @for (l of links; track l.route) {
+        <a [routerLink]="l.route" routerLinkActive="active" class="link" [matTooltip]="collapsed() ? l.label : ''" matTooltipPosition="right">
+          <mat-icon>{{ l.icon }}</mat-icon>
+          @if (!collapsed()) { <span class="lbl">{{ l.label }}</span> }
+        </a>
+      }
+    </nav>
+
+    <div class="side-foot">
+      <button mat-stroked-button class="demo-btn" (click)="startDemo()">
+        <mat-icon>play_circle</mat-icon>
+        @if (!collapsed()) { <span>Start Guided Demo</span> }
+      </button>
+      <button mat-icon-button (click)="toggleCollapsed()" class="collapse-btn" [matTooltip]="collapsed() ? 'Expand' : 'Collapse'">
+        <mat-icon>{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <header class="topbar">
+      <div class="left">
+        <h1 class="page-title gradient-text">AgriGrid Console</h1>
+        <span class="subtitle">Sustainable cooperative · Algiers Plain · 5 plots</span>
+      </div>
+      <div class="right">
+        <app-scenario-toolbar />
+        <button mat-icon-button [matMenuTriggerFor]="alertsMenu" matBadge="{{ alertCount() || null }}" matBadgeColor="warn" matBadgeSize="small" [matBadgeHidden]="!alertCount()" matTooltip="Alerts">
+          <mat-icon>notifications_active</mat-icon>
+        </button>
+        <mat-menu #alertsMenu="matMenu" xPosition="before" class="alerts-menu">
+          @if (data.alerts().length === 0) {
+            <div class="empty-alerts">No active alerts</div>
+          }
+          @for (a of data.alerts(); track a.id) {
+            <div class="alert-item" [attr.data-level]="a.level">
+              <mat-icon>{{ a.level === 'critical' ? 'warning' : 'info' }}</mat-icon>
+              <div>
+                <strong>{{ a.title }}</strong>
+                <span>{{ a.detail }}</span>
+              </div>
+            </div>
+          }
+        </mat-menu>
+        <button mat-icon-button (click)="toggleTheme()" [matTooltip]="isDark() ? 'Light mode' : 'Dark mode'">
+          <mat-icon>{{ isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+        <button mat-flat-button color="primary" class="demo-cta" (click)="startDemo()">
+          <mat-icon>play_circle</mat-icon>
+          <span>Demo</span>
+        </button>
+      </div>
+    </header>
+    <main class="content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

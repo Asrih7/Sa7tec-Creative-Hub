@@ -1,0 +1,72 @@
+<div class="twin-page">
+  <div class="head">
+    <div>
+      <h2>Digital twin · what-if simulator</h2>
+      <p>A live virtual replica of each plot. Push it through drought, rain or AI-driven irrigation and watch the field react week by week.</p>
+    </div>
+    <div class="actions">
+      <button mat-stroked-button (click)="reset()"><mat-icon>restart_alt</mat-icon> Reset</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="card field" @panelIn>
+      <div class="field-head">
+        <div>
+          <strong>{{ selected().name }}</strong>
+          <small>{{ selected().crop }} · {{ selected().area }} ha · digital replica</small>
+        </div>
+        <span class="status" [attr.data-tone]="status().tone">
+          <span class="d"></span> {{ status().label }}
+        </span>
+      </div>
+      <div class="cells">
+        @for (i of cells; track i) {
+          <div class="cell" [style.background]="cellColor(i)"></div>
+        }
+      </div>
+      <div class="readout">
+        <div><span>NDVI</span><strong>{{ ndviAt() | number:'1.2-2' }}</strong></div>
+        <div><span>Moisture</span><strong>{{ moistureAt() | number:'1.0-0' }}%</strong></div>
+        <div><span>Yield est.</span><strong>{{ yieldAt() }} t/ha</strong></div>
+        <div><span>Sim week</span><strong>+{{ weeks() }}</strong></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <h3>Pick a plot</h3>
+        @for (p of plots(); track p.id) {
+          <button class="prow" [class.active]="p.id === selectedId()" (click)="selectedId.set(p.id); reset()">
+            <span class="d" [style.background]="p.status === 'stress' ? '#ef4444' : p.status === 'watch' ? '#f59e0b' : '#16a34a'"></span>
+            <div><strong>{{ p.name }}</strong><small>{{ p.crop }}</small></div>
+          </button>
+        }
+      </div>
+
+      <div class="card sim">
+        <h3>Scenario</h3>
+        <mat-button-toggle-group [value]="scenario()" (change)="scenario.set($event.value)">
+          <mat-button-toggle value="baseline"><mat-icon>tune</mat-icon> Baseline</mat-button-toggle>
+          <mat-button-toggle value="drought"><mat-icon>local_fire_department</mat-icon> Drought</mat-button-toggle>
+          <mat-button-toggle value="rain"><mat-icon>rainy</mat-icon> Heavy rain</mat-button-toggle>
+          <mat-button-toggle value="irrigated"><mat-icon>water_drop</mat-icon> AI-irrigated</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <label class="ts-label">Simulation horizon<span>+{{ weeks() }} weeks</span></label>
+        <mat-slider min="0" max="12" step="1" discrete>
+          <input matSliderThumb [value]="weeks()" (valueChange)="weeks.set($event)" />
+        </mat-slider>
+
+        <div class="explain">
+          @switch (scenario()) {
+            @case ('drought')   { <p><mat-icon>local_fire_department</mat-icon> 0 mm rainfall, +6°C heat anomaly. NDVI falls fast, moisture drains, yield collapses without intervention.</p> }
+            @case ('rain')      { <p><mat-icon>rainy</mat-icon> Sustained rainfall replenishes the soil. Yield recovers but disease risk climbs above week 6.</p> }
+            @case ('irrigated') { <p><mat-icon>auto_awesome</mat-icon> AI-driven drip cycles every 36h. NDVI tracks upward and yield holds even in dry weeks.</p> }
+            @default            { <p><mat-icon>tune</mat-icon> Climatology baseline. Crop follows historical seasonality.</p> }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

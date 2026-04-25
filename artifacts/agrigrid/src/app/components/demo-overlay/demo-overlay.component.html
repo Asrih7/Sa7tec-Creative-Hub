@@ -1,0 +1,28 @@
+@if (active() && step(); as s) {
+  <div class="demo-backdrop" @overlayAnim></div>
+  <div class="demo-card glass" [class.center]="s.position === 'center' || !s.highlight" @cardAnim>
+    <div class="progress">
+      <div class="bar" [style.width.%]="progress()"></div>
+    </div>
+    <div class="head">
+      <span class="step-pill">Step {{ current() }} / {{ totalSteps() }}</span>
+      <button mat-icon-button class="close" (click)="demo.stop()" aria-label="Close demo">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <h3 class="title">{{ s.title }}</h3>
+    <p class="body">{{ s.body }}</p>
+    <div class="actions">
+      <button mat-stroked-button (click)="demo.prev()" [disabled]="isFirst()">
+        <mat-icon>arrow_back</mat-icon> Back
+      </button>
+      <button mat-flat-button color="primary" (click)="demo.next()">
+        @if (isLast()) {
+          <ng-container>Finish</ng-container>
+        } @else {
+          <ng-container><span>Next</span> <mat-icon iconPositionEnd>arrow_forward</mat-icon></ng-container>
+        }
+      </button>
+    </div>
+  </div>
+}

@@ -1,0 +1,49 @@
+.sensing-page { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: var(--shadow-sm); }
+.left, .right { display: flex; flex-direction: column; gap: 16px; }
+
+.head-card { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; }
+.head-card h2 { margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: -.015em; }
+.head-card p { margin: 4px 0 0; color: var(--text-mute); font-size: .85rem; }
+
+.grid-card { display: flex; flex-direction: column; gap: 14px; }
+.grid-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.grid-head strong { font-size: .98rem; }
+.grid-head small { display: block; color: var(--text-mute); font-size: .78rem; margin-top: 2px; }
+.legend { display: flex; align-items: center; gap: 8px; font-size: .76rem; color: var(--text-mute); }
+.legend .ramp { width: 110px; height: 8px; border-radius: 4px; }
+.legend .ramp[data-layer="ndvi"]     { background: linear-gradient(90deg, #7f1d1d, #16a34a); }
+.legend .ramp[data-layer="moisture"] { background: linear-gradient(90deg, #fef3c7, #0ea5e9); }
+.legend .ramp[data-layer="temp"]     { background: linear-gradient(90deg, #0ea5e9, #ef4444); }
+
+.cells {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px;
+  aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden;
+  padding: 4px; background: var(--surface-2);
+}
+.cell { border-radius: 4px; transition: background .8s ease; cursor: pointer; }
+.cell:hover { transform: scale(1.08); box-shadow: 0 0 0 2px var(--primary); z-index: 2; transition: transform .15s, box-shadow .15s; }
+
+.grid-foot { display: flex; justify-content: space-between; font-size: .82rem; color: var(--text-mute); }
+.grid-foot strong { color: var(--text); font-weight: 700; }
+
+.plot-list h3, .history h3 { margin: 0 0 12px; font-size: 1rem; font-weight: 700; }
+.plot-list .row {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid transparent;
+  background: var(--surface-2); margin-bottom: 6px; cursor: pointer; transition: all .2s;
+  font-family: inherit; text-align: left;
+}
+.plot-list .row:hover { transform: translateX(2px); }
+.plot-list .row.active { border-color: var(--primary); background: var(--primary-soft); }
+.plot-list .d { width: 8px; height: 8px; border-radius: 50%; }
+.plot-list .row > div { flex: 1; }
+.plot-list strong { font-size: .9rem; display: block; }
+.plot-list small { font-size: .75rem; color: var(--text-mute); display: block; }
+.plot-list .ndvi { font-weight: 700; color: var(--primary); font-size: .9rem; }
+
+.history .chart-wrap { height: 200px; }
+.history .hint { color: var(--text-mute); font-size: .8rem; margin: 10px 0 0; }
+
+@media (max-width: 1100px) { .sensing-page { grid-template-columns: 1fr; } }

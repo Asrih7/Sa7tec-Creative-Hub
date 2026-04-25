@@ -1,0 +1,49 @@
+<div class="bc-page" data-tour="ledger">
+  <div class="head">
+    <div>
+      <h2>Blockchain ledger</h2>
+      <p>Tamper-evident chain of agricultural events: irrigation, fertilizer, planting and harvest. Every block is hashed and links to the previous one.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="add()"><mat-icon>add</mat-icon> Mint mock block</button>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><mat-icon>link</mat-icon><div><span>Total blocks</span><strong>{{ blocks().length }}</strong></div></div>
+    <div class="kpi"><mat-icon>verified</mat-icon><div><span>Chain integrity</span><strong>Valid · 100%</strong></div></div>
+    <div class="kpi"><mat-icon>groups</mat-icon><div><span>Validator nodes</span><strong>7 active</strong></div></div>
+    <div class="kpi"><mat-icon>history</mat-icon><div><span>Avg block time</span><strong>2.4 s</strong></div></div>
+  </div>
+
+  <div class="chain" [@chain]="blocks().length">
+    @for (b of blocks(); track b.id; let i = $index, last = $last) {
+      <div class="block" [class.selected]="selected() === b.id" (click)="selected.set(selected() === b.id ? null : b.id)" [attr.data-tone]="byType(b.type).tone">
+        <div class="block-head">
+          <span class="idx">#{{ blocks().length - i }}</span>
+          <span class="type" [attr.data-tone]="byType(b.type).tone">
+            <mat-icon>{{ byType(b.type).ico }}</mat-icon>
+            {{ byType(b.type).label }}
+          </span>
+        </div>
+        <strong class="actor">{{ b.signer }}</strong>
+        <p class="action">
+          {{ b.details }}
+          @if (b.amount) { <span class="amt">· {{ b.amount }} {{ b.unit }}</span> }
+        </p>
+        <div class="meta">
+          <span><mat-icon>fingerprint</mat-icon>{{ short(b.hash) }}</span>
+          <span><mat-icon>place</mat-icon>{{ plotName(b.plotId) }}</span>
+          <span><mat-icon>schedule</mat-icon>{{ fmt(b.ts) }}</span>
+        </div>
+        @if (selected() === b.id) {
+          <div class="expand">
+            <div><span>Block hash</span><code>{{ b.hash }}</code></div>
+            <div><span>Previous hash</span><code>{{ b.prevHash }}</code></div>
+            <div><span>Plot</span><code>{{ b.plotId }}</code></div>
+            <div><span>Block ID</span><code>{{ b.id }}</code></div>
+          </div>
+        }
+        @if (!last) { <div class="link-arrow"><mat-icon>arrow_downward</mat-icon></div> }
+      </div>
+    }
+  </div>
+</div>

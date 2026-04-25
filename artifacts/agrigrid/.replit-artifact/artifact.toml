@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/agrigrid/"
+title = "AgriGrid"
+version = "1.0.0"
+id = "artifacts/agrigrid"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/agrigrid/" ]
+localPort = 22022
+
+[services.development]
+run = "pnpm --filter @workspace/agrigrid run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/agrigrid", "run", "build" ]
+publicDir = "artifacts/agrigrid/dist/agrigrid/browser"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22022"
+BASE_PATH = "/agrigrid/"

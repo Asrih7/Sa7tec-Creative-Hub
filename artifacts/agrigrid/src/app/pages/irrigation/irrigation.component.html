@@ -1,0 +1,76 @@
+<div class="irrig-page" data-tour="irrigation">
+  <div class="head">
+    <div>
+      <h2>Smart irrigation IoT</h2>
+      <p>Per-plot drip lines steered by soil-moisture sensors and AI demand model.</p>
+    </div>
+    <div class="actions">
+      <button mat-stroked-button (click)="stopAll()"><mat-icon>stop_circle</mat-icon> Stop all</button>
+      <button mat-flat-button color="primary" (click)="autoAll()"><mat-icon>bolt</mat-icon> Auto-irrigate stressed plots</button>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><mat-icon>sensors</mat-icon><div><span>Active valves</span><strong>{{ totalActive() }} / {{ plots().length }}</strong></div></div>
+    <div class="kpi"><mat-icon>water_drop</mat-icon><div><span>Flow right now</span><strong>{{ totalLitres() | number }} L/h</strong></div></div>
+    <div class="kpi"><mat-icon>savings</mat-icon><div><span>Water saved</span><strong>{{ saved() | number }} m³</strong></div></div>
+    <div class="kpi"><mat-icon>schedule</mat-icon><div><span>Next AI run</span><strong>in 12 min</strong></div></div>
+  </div>
+
+  <div class="content">
+    <div class="iot-grid" [@rows]="plots().length">
+      @for (p of plots(); track p.id) {
+        <div class="iot-card" [class.on]="p.irrigationOn">
+          <div class="head">
+            <div>
+              <strong>{{ p.name }}</strong>
+              <small>{{ p.crop }} · {{ p.area }} ha</small>
+            </div>
+            <span class="state" [class.on]="p.irrigationOn">
+              <span class="d"></span>
+              {{ p.irrigationOn ? 'Irrigating' : 'Idle' }}
+            </span>
+          </div>
+
+          <div class="metrics">
+            <div><span>Moisture</span><strong>{{ p.moisture }}%</strong>
+              <div class="bar"><div [style.width.%]="p.moisture" [style.background]="p.moisture < 30 ? '#ef4444' : p.moisture < 50 ? '#f59e0b' : '#0ea5e9'"></div></div>
+            </div>
+            <div><span>Soil temp</span><strong>{{ p.temperature }}°C</strong></div>
+            <div><span>Flow</span><strong>{{ litres(p) | number }} L/h</strong></div>
+          </div>
+
+          <div class="pipe">
+            <div class="pipe-line"><div class="flow" [class.on]="p.irrigationOn"></div></div>
+            <div class="emitters">
+              @for (i of [1,2,3,4,5,6]; track i) {
+                <span class="drop" [class.on]="p.irrigationOn" [style.animation-delay.s]="i * .15"></span>
+              }
+            </div>
+          </div>
+
+          <div class="foot">
+            <small>Trigger: <strong>{{ p.moisture < 30 ? 'AI · low moisture' : 'Manual' }}</strong></small>
+            <mat-slide-toggle [checked]="p.irrigationOn" (change)="toggle(p)"></mat-slide-toggle>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <h3>Average soil moisture</h3>
+        <div class="chart-wrap">
+          <app-line-chart [labels]="moistureLabels()" [data]="moistureData()" label="Moisture" color="#0ea5e9" [yMin]="0" [yMax]="100" />
+        </div>
+      </div>
+      <div class="card rules">
+        <h3>Active rules</h3>
+        <div class="rule"><mat-icon>water_drop</mat-icon><div><strong>Moisture &lt; 30%</strong><small>→ open valve for 45 min</small></div></div>
+        <div class="rule"><mat-icon>thermostat</mat-icon><div><strong>Soil temp &gt; 32°C</strong><small>→ shift cycle to night</small></div></div>
+        <div class="rule"><mat-icon>cloud</mat-icon><div><strong>Rain forecast &gt; 6mm</strong><small>→ skip next cycle</small></div></div>
+        <div class="rule"><mat-icon>auto_awesome</mat-icon><div><strong>AI override</strong><small>can boost duration ±20%</small></div></div>
+      </div>
+    </div>
+  </div>
+</div>

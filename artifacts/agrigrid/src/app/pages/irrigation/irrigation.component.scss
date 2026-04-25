@@ -1,0 +1,107 @@
+.irrig-page { display: flex; flex-direction: column; gap: 18px; }
+
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.head h2 { margin: 0; font-size: 1.4rem; font-weight: 800; letter-spacing: -.015em; }
+.head p { margin: 4px 0 0; color: var(--text-mute); font-size: .88rem; }
+.actions { display: flex; gap: 8px; }
+
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; box-shadow: var(--shadow-sm);
+}
+.kpi mat-icon { color: var(--primary); }
+.kpi span { display: block; font-size: .72rem; color: var(--text-mute); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+.kpi strong { display: block; font-size: 1.15rem; font-weight: 800; margin-top: 2px; }
+
+.content { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
+
+.iot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; align-content: start; }
+
+.iot-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 16px; box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: 12px;
+  transition: all .3s;
+}
+.iot-card.on { border-color: rgba(14, 165, 233, .4); box-shadow: 0 4px 24px rgba(14, 165, 233, .15); }
+.iot-card .head { display: flex; justify-content: space-between; align-items: flex-start; }
+.iot-card strong { font-size: 1rem; }
+.iot-card small { color: var(--text-mute); font-size: .78rem; display: block; margin-top: 2px; }
+
+.state {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  background: var(--surface-2); color: var(--text-mute);
+  font-size: .72rem; font-weight: 700;
+}
+.state .d { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.state.on { background: rgba(14, 165, 233, .12); color: var(--accent); }
+.state.on .d { background: var(--accent); animation: pulse-dot 1.4s infinite; }
+
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.metrics > div { background: var(--surface-2); border-radius: 8px; padding: 10px; }
+.metrics span { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-mute); font-weight: 600; }
+.metrics strong { display: block; font-size: 1rem; font-weight: 700; margin-top: 2px; }
+.metrics .bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+.metrics .bar > div { height: 100%; transition: width .8s, background-color .8s; }
+
+.pipe { position: relative; padding: 8px 0; }
+.pipe-line {
+  height: 8px; background: var(--surface-2);
+  border-radius: 4px; overflow: hidden; position: relative;
+  border: 1px solid var(--border);
+}
+.pipe-line .flow {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background-size: 60px 100%;
+  opacity: 0;
+}
+.pipe-line .flow.on {
+  opacity: 1;
+  animation: pipe-flow 1.2s linear infinite;
+}
+@keyframes pipe-flow {
+  0%   { transform: translateX(-60px); }
+  100% { transform: translateX(60px); }
+}
+
+.emitters { display: flex; justify-content: space-around; margin-top: 4px; }
+.drop {
+  width: 6px; height: 10px;
+  background: var(--accent); border-radius: 0 0 50% 50% / 0 0 60% 60%;
+  opacity: 0; transform: translateY(-8px);
+}
+.drop.on { animation: drip 1.6s ease-in infinite; }
+@keyframes drip {
+  0%   { opacity: 0; transform: translateY(-6px) scale(.7); }
+  35%  { opacity: 1; transform: translateY(0) scale(1); }
+  70%  { opacity: 1; transform: translateY(14px) scale(.6); }
+  100% { opacity: 0; transform: translateY(20px) scale(.4); }
+}
+
+.foot { display: flex; justify-content: space-between; align-items: center; }
+.foot small { color: var(--text-mute); }
+.foot strong { color: var(--text); }
+
+.side { display: flex; flex-direction: column; gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: var(--shadow-sm); }
+.card h3 { margin: 0 0 12px; font-size: 1rem; font-weight: 700; }
+.chart-wrap { height: 200px; }
+
+.rules .rule {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; background: var(--surface-2); border-radius: 8px;
+  margin-bottom: 6px;
+}
+.rules .rule mat-icon { color: var(--primary); font-size: 18px; height: 18px; width: 18px; margin-top: 2px; }
+.rules strong { font-size: .85rem; }
+.rules small { display: block; color: var(--text-mute); font-size: .78rem; margin-top: 2px; }
+
+@media (max-width: 1100px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .content { grid-template-columns: 1fr; }
+  .iot-grid { grid-template-columns: 1fr; }
+}

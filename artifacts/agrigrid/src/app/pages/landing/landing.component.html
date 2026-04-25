@@ -1,0 +1,195 @@
+<div class="landing">
+  <header class="nav">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" width="36" height="36">
+        <defs><linearGradient id="lh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22c55e"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs>
+        <rect width="64" height="64" rx="14" fill="url(#lh)"/>
+        <path d="M32 12 C24 18 18 26 18 36 c0 9 6 14 14 14 s14-5 14-14 c0-10-6-18-14-24z" fill="#fff" opacity=".9"/>
+        <path d="M32 22 v24 M22 36 q10 -10 20 0" stroke="#16a34a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+      <strong>AgriGrid</strong>
+    </div>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#impact">Impact</a>
+      <a routerLink="/app/dashboard" class="enter">Open Console <mat-icon>arrow_forward</mat-icon></a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text" data-tour="dashboard-hero" @fadeUp>
+      <span class="badge">Smart Agriculture · Decision Platform</span>
+      <h1>From soil to satellite,<br/><span class="gradient-text">every drop has a purpose.</span></h1>
+      <p>AgriGrid blends <strong>AI</strong>, <strong>remote sensing</strong>, <strong>IoT</strong> and <strong>blockchain</strong> into one platform — helping farmers grow more with less, and proving every step of the way.</p>
+      <div class="cta-row">
+        <button mat-flat-button color="primary" class="primary-cta" (click)="startDemo()">
+          <mat-icon>play_circle</mat-icon>
+          Start Guided Demo
+        </button>
+        <a mat-stroked-button routerLink="/app/dashboard" class="secondary-cta">
+          <mat-icon>dashboard</mat-icon>
+          Open Console
+        </a>
+      </div>
+      <div class="trust">
+        <span><mat-icon>verified</mat-icon> Blockchain audited</span>
+        <span><mat-icon>eco</mat-icon> Carbon-aware</span>
+        <span><mat-icon>school</mat-icon> Academic demo</span>
+      </div>
+    </div>
+
+    <div class="hero-media" @fadeUp>
+      <div class="video-wrap" (click)="showVideo.set(true)" role="button" tabindex="0">
+        <div class="video-bg">
+          <svg class="orbs" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="o1" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stop-color="#22c55e" stop-opacity=".7"/>
+                <stop offset="1" stop-color="#22c55e" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="o2" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stop-color="#0ea5e9" stop-opacity=".7"/>
+                <stop offset="1" stop-color="#0ea5e9" stop-opacity="0"/>
+              </radialGradient>
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="600" height="400" fill="#052e16"/>
+            <rect width="600" height="400" fill="url(#grid)"/>
+            <circle cx="180" cy="160" r="180" fill="url(#o1)">
+              <animate attributeName="cy" values="160;200;160" dur="6s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="430" cy="240" r="160" fill="url(#o2)">
+              <animate attributeName="cx" values="430;380;430" dur="7s" repeatCount="indefinite"/>
+            </circle>
+            <g class="dots">
+              @for (i of [0,1,2,3,4,5,6,7,8]; track i) {
+                <circle [attr.cx]="60 + (i*60)" [attr.cy]="200 + (i%2 ? 60 : -40)" r="3" fill="#86efac">
+                  <animate attributeName="opacity" values=".3;1;.3" [attr.dur]="(2 + i*0.2) + 's'" repeatCount="indefinite"/>
+                </circle>
+              }
+            </g>
+            <g transform="translate(300 200)" class="satellite">
+              <circle r="40" fill="rgba(34,197,94,.18)"/>
+              <circle r="22" fill="rgba(34,197,94,.35)"/>
+              <circle r="8" fill="#22c55e"/>
+            </g>
+          </svg>
+        </div>
+        @if (!showVideo()) {
+          <div class="play-overlay">
+            <div class="play-btn"><mat-icon>play_arrow</mat-icon></div>
+            <span class="caption">Watch the AgriGrid story · 90s</span>
+          </div>
+        } @else {
+          <div class="play-overlay playing">
+            <div class="story">
+              <div class="story-step active">
+                <div class="step-dot"></div>
+                <div class="step-text"><strong>Problem:</strong> 50% of irrigation water is wasted by traditional methods.</div>
+              </div>
+              <div class="story-step active s2">
+                <div class="step-dot"></div>
+                <div class="step-text"><strong>Insight:</strong> Satellites see vegetation stress before our eyes do.</div>
+              </div>
+              <div class="story-step active s3">
+                <div class="step-dot"></div>
+                <div class="step-text"><strong>Action:</strong> AI tells smart valves exactly when to open.</div>
+              </div>
+              <div class="story-step active s4">
+                <div class="step-dot"></div>
+                <div class="step-text"><strong>Trust:</strong> Every action is signed onto a tamper-proof ledger.</div>
+              </div>
+            </div>
+            <button mat-stroked-button class="replay" (click)="showVideo.set(false); $event.stopPropagation()">
+              <mat-icon>refresh</mat-icon> Replay
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="stat-strip">
+        @for (p of pillars; track p.label) {
+          <div class="stat">
+            <strong>{{ p.num }}</strong>
+            <span>{{ p.label }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="features-section">
+    <div class="section-head">
+      <span class="kicker">What's inside</span>
+      <h2>One platform. Four pillars.</h2>
+      <p>Each pillar is a fully-interactive module with mock IoT, satellite and blockchain data — built to show, not to tell.</p>
+    </div>
+    <div class="features-grid" @staggerCards>
+      @for (f of features; track f.title) {
+        <div class="feature">
+          <div class="icon"><mat-icon>{{ f.icon }}</mat-icon></div>
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.desc }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section id="how" class="how-section">
+    <div class="section-head">
+      <span class="kicker">How it flows</span>
+      <h2>Sense → Decide → Act → Prove</h2>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="num">1</div>
+        <mat-icon>satellite_alt</mat-icon>
+        <h4>Sense</h4>
+        <p>Satellites + soil sensors stream NDVI, moisture, salinity & weather.</p>
+      </div>
+      <div class="flow-arrow"><mat-icon>arrow_forward</mat-icon></div>
+      <div class="flow-step">
+        <div class="num">2</div>
+        <mat-icon>auto_awesome</mat-icon>
+        <h4>Decide</h4>
+        <p>AI cross-references every signal and produces an explainable plan.</p>
+      </div>
+      <div class="flow-arrow"><mat-icon>arrow_forward</mat-icon></div>
+      <div class="flow-step">
+        <div class="num">3</div>
+        <mat-icon>water_drop</mat-icon>
+        <h4>Act</h4>
+        <p>Drip-line valves open exactly where moisture is critical.</p>
+      </div>
+      <div class="flow-arrow"><mat-icon>arrow_forward</mat-icon></div>
+      <div class="flow-step">
+        <div class="num">4</div>
+        <mat-icon>verified</mat-icon>
+        <h4>Prove</h4>
+        <p>Every action is signed and committed to a verifiable ledger.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="impact" class="impact">
+    <div class="impact-card">
+      <div>
+        <span class="kicker dark">Ready to see it?</span>
+        <h2>The full demo runs in 90 seconds.</h2>
+        <p>Press the button — AgriGrid will guide you through a real cooperative scenario, simulate a drought, dispatch the AI, and show the impact on sustainability metrics.</p>
+      </div>
+      <button mat-flat-button color="primary" class="primary-cta xl" (click)="startDemo()">
+        <mat-icon>play_circle</mat-icon>
+        Start Guided Demo
+      </button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>AgriGrid · Academic demo · Built with Angular {{ '·' }} Mock data only</span>
+    <span class="muted">© 2026 AgriGrid Cooperative Platform</span>
+  </footer>
+</div>
