@@ -23,6 +23,8 @@ The site is a single-page React app with a hidden admin panel. There is no backe
 - `/admin` — password login (NOT linked in any nav)
 - `/admin/dashboard` — full content editor with tabs for: General (site title, tagline, hero copy, about), Services (add/reorder/delete with icon + color picker), Portfolio (with image upload), Flagship Game (title, copy, hero image, multiple screenshots), Stats (label + value), Process steps, Testimonials (with avatar upload), Media (hero background image), Contact (email, phone, WhatsApp, address, Twitter/LinkedIn/Instagram/GitHub URLs), Submissions (view/delete/export JSON), Password (change admin password). Image uploads are stored as base64 inside the same browser-storage content blob.
 
+A floating WhatsApp chat button (`src/components/WhatsAppButton.tsx`) is mounted in `PublicLayout` and appears on every public page. It uses the WhatsApp number set in the admin Contact tab — if the number is empty, the button is hidden. Clicking it opens a small chat-style bubble with a "Start chat on WhatsApp" link that deep-links to `https://wa.me/<digits>?text=<localized message>`. The bubble copy and tooltip are translated EN/FR/AR and the button mirrors to the left side in RTL mode.
+
 **Default admin password:** `sa7tec2026`
 The password is stored in `localStorage` under `sa7tec_admin_pwd` and can be changed from the dashboard.
 Session token is kept in `sessionStorage` so login expires when the browser closes.
