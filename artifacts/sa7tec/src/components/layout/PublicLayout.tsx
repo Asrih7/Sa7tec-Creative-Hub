@@ -1,8 +1,9 @@
 import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useContent } from "@/lib/content-store";
 import { useLanguage } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
 import { motion, AnimatePresence } from "framer-motion";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -14,6 +15,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { content } = useContent();
   const { t } = useLanguage();
+  const { isDark, toggleTheme } = useTheme();
   const [location] = useLocation();
 
   useEffect(() => {
@@ -32,48 +34,67 @@ export function PublicLayout({ children }: { children: ReactNode }) {
     { label: t("nav.contact"), path: "/contact" },
   ];
 
-  return (
-    <div
+  const ThemeToggle = () => (
+    <motion.button
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.94 }}
+      onClick={toggleTheme}
+      aria-label={isDark ? t("theme.toggle_light") : t("theme.toggle_dark")}
+      title={isDark ? t("theme.toggle_light") : t("theme.toggle_dark")}
       style={{
-        minHeight: "100vh",
-        background: "#000",
-        color: "#fff",
-        overflowX: "hidden",
+        background: "transparent",
+        border: "1px solid var(--s7-border-2)",
+        color: "var(--s7-fg-dim)",
+        borderRadius: "8px",
+        width: "36px", height: "36px",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        cursor: "pointer",
+        transition: "border-color 0.2s, color 0.2s",
+        flexShrink: 0,
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.borderColor = `${CYAN}55`;
+        (e.currentTarget as HTMLButtonElement).style.color = CYAN;
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--s7-border-2)";
+        (e.currentTarget as HTMLButtonElement).style.color = "var(--s7-fg-dim)";
       }}
     >
+      {isDark ? <Sun size={15} /> : <Moon size={15} />}
+    </motion.button>
+  );
+
+  return (
+    <div style={{ minHeight: "100vh", background: "var(--s7-bg)", color: "var(--s7-fg)", overflowX: "hidden" }}>
+
       {/* ─── Floating Header ─── */}
       <header
         style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
           padding: scrolled ? "0.875rem 5vw" : "1.5rem 5vw",
-          background: scrolled ? "rgba(0,0,0,0.85)" : "transparent",
+          background: scrolled ? "var(--s7-header-bg)" : "transparent",
           backdropFilter: scrolled ? "blur(20px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "none",
-          transition: "all 0.3s ease",
+          borderBottom: scrolled ? "1px solid var(--s7-border)" : "none",
+          transition: "padding 0.3s ease, background 0.3s ease, border-color 0.3s ease",
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}
       >
         {/* Logo */}
         <Link href="/">
-          <div
-            style={{
-              display: "flex", alignItems: "center", gap: "0.6rem",
-              textDecoration: "none", cursor: "pointer",
-            }}
-          >
-            <div
-              style={{
-                width: "32px", height: "32px", borderRadius: "8px",
-                background: `${CYAN}18`, border: `1px solid ${CYAN}44`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}
-            >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", textDecoration: "none", cursor: "pointer" }}>
+            <div style={{
+              width: "32px", height: "32px", borderRadius: "8px",
+              background: `${CYAN}18`, border: `1px solid ${CYAN}44`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0,
+            }}>
               <span style={{ color: CYAN, fontSize: "0.75rem", fontWeight: 800, fontFamily: "monospace" }}>S7</span>
             </div>
             <span style={{
               fontFamily: "'Outfit', sans-serif", fontWeight: 800,
-              fontSize: "1.125rem", color: "#fff", letterSpacing: "-0.02em",
+              fontSize: "1.125rem", color: "var(--s7-fg)", letterSpacing: "-0.02em",
             }}>
               {content.siteInfo.title}
             </span>
@@ -81,13 +102,13 @@ export function PublicLayout({ children }: { children: ReactNode }) {
         </Link>
 
         {/* Desktop Nav */}
-        <nav style={{ alignItems: "center", gap: "2rem" }} className="hidden md:flex">
+        <nav style={{ alignItems: "center", gap: "1.75rem" }} className="hidden md:flex">
           {navLinks.map((link) => (
             <Link key={link.path} href={link.path}>
               <span
                 style={{
                   fontSize: "0.875rem", fontWeight: 500,
-                  color: location === link.path ? "#fff" : "rgba(255,255,255,0.4)",
+                  color: location === link.path ? "var(--s7-fg)" : "var(--s7-fg-dim)",
                   cursor: "pointer", textDecoration: "none",
                   transition: "color 0.2s", letterSpacing: "0.01em",
                   fontFamily: "'Outfit', sans-serif",
@@ -98,6 +119,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             </Link>
           ))}
           <LanguageSwitcher variant="header" />
+          <ThemeToggle />
           <Link href="/contact">
             <motion.button
               whileHover={{ scale: 1.04, boxShadow: `0 0 20px rgba(34,211,238,0.3)` }}
@@ -116,26 +138,28 @@ export function PublicLayout({ children }: { children: ReactNode }) {
         </nav>
 
         {/* Mobile Controls */}
-        <div style={{ alignItems: "center", gap: "0.75rem" }} className="flex md:hidden">
+        <div style={{ alignItems: "center", gap: "0.6rem" }} className="flex md:hidden">
+          <ThemeToggle />
           <LanguageSwitcher variant="header" />
           <button
             onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
             style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "#fff", borderRadius: "8px",
+              background: "var(--s7-card-bg)",
+              border: "1px solid var(--s7-border-2)",
+              color: "var(--s7-fg)", borderRadius: "8px",
               width: "40px", height: "40px",
               display: "flex", alignItems: "center", justifyContent: "center",
               cursor: "pointer",
             }}
-            aria-label="Toggle menu"
           >
             {menuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -145,7 +169,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             transition={{ duration: 0.2 }}
             style={{
               position: "fixed", inset: 0, zIndex: 99,
-              background: "rgba(0,0,0,0.97)",
+              background: "var(--s7-menu-bg)",
               backdropFilter: "blur(24px)",
               WebkitBackdropFilter: "blur(24px)",
               display: "flex", flexDirection: "column",
@@ -165,10 +189,9 @@ export function PublicLayout({ children }: { children: ReactNode }) {
                     onClick={() => setMenuOpen(false)}
                     style={{
                       fontSize: "2.5rem", fontWeight: 800,
-                      color: location === link.path ? CYAN : "#fff",
+                      color: location === link.path ? CYAN : "var(--s7-fg)",
                       cursor: "pointer", textDecoration: "none",
-                      fontFamily: "'Outfit', sans-serif",
-                      letterSpacing: "-0.02em",
+                      fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.02em",
                     }}
                   >
                     {link.label}
@@ -189,8 +212,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
                     padding: "0.9rem 2.5rem", borderRadius: "9999px",
                     fontWeight: 700, fontSize: "1rem",
                     border: "none", cursor: "pointer",
-                    fontFamily: "'Outfit', sans-serif",
-                    marginTop: "1rem",
+                    fontFamily: "'Outfit', sans-serif", marginTop: "1rem",
                   }}
                 >
                   {t("cta.start_project")}
@@ -201,10 +223,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
-      <main style={{ paddingTop: 0 }}>
-        {children}
-      </main>
+      <main>{children}</main>
 
       <WhatsAppButton />
     </div>

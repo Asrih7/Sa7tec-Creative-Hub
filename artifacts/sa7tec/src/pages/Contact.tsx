@@ -15,10 +15,11 @@ import { CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CYAN = "#22d3ee";
+
 const inputStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.03)",
-  border: "1px solid rgba(255,255,255,0.1)",
-  color: "#fff",
+  background: "var(--s7-input-bg)",
+  border: "1px solid var(--s7-border-2)",
+  color: "var(--s7-fg)",
   borderRadius: "10px",
   padding: "0.75rem 1rem",
   fontSize: "0.9rem",
@@ -55,25 +56,22 @@ export default function Contact() {
 
   return (
     <PublicLayout>
-      <div
-        style={{
-          minHeight: "100vh", background: "#000",
-          paddingTop: "120px", paddingBottom: "80px",
-          padding: "120px 5vw 80px",
-          position: "relative", overflow: "hidden",
-        }}
-      >
-        {/* Background glow */}
-        <div style={{
+      <div style={{
+        minHeight: "100vh", background: "var(--s7-bg)",
+        padding: "120px 5vw 80px",
+        position: "relative", overflow: "hidden",
+      }}>
+        {/* Ambient glows */}
+        <div aria-hidden="true" style={{
           position: "absolute", top: "10%", right: "-10%",
           width: "50vw", height: "50vw",
-          background: `radial-gradient(ellipse, rgba(34,211,238,0.05) 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse, var(--s7-glow-cyan) 0%, transparent 70%)`,
           pointerEvents: "none",
         }} />
-        <div style={{
+        <div aria-hidden="true" style={{
           position: "absolute", bottom: "10%", left: "-10%",
           width: "40vw", height: "40vw",
-          background: `radial-gradient(ellipse, rgba(167,139,250,0.04) 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse, var(--s7-glow-violet) 0%, transparent 70%)`,
           pointerEvents: "none",
         }} />
 
@@ -94,7 +92,7 @@ export default function Contact() {
             </p>
             <h1 style={{
               fontSize: "clamp(2.5rem, 6vw, 5rem)",
-              fontWeight: 900, color: "#fff",
+              fontWeight: 900, color: "var(--s7-fg)",
               letterSpacing: "-0.04em", lineHeight: 1.05,
               fontFamily: "'Outfit', sans-serif", margin: 0,
             }}>
@@ -102,7 +100,7 @@ export default function Contact() {
               <span style={{ color: CYAN }}>{t("contact.title_b")}</span>
             </h1>
             <p style={{
-              color: "rgba(255,255,255,0.35)", fontSize: "1rem",
+              color: "var(--s7-fg-dim)", fontSize: "1rem",
               lineHeight: 1.7, marginTop: "1.5rem", maxWidth: "540px",
             }}>
               {t("contact.subtitle")}
@@ -110,13 +108,9 @@ export default function Contact() {
           </motion.div>
 
           {/* Grid */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 2fr",
-            gap: "4rem",
-            alignItems: "start",
-          }}
-          className="contact-grid"
+          <div
+            style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "4rem", alignItems: "start" }}
+            className="contact-grid"
           >
             {/* Left: contact info */}
             <motion.div
@@ -130,15 +124,9 @@ export default function Contact() {
                 { label: t("contact.call_us"), value: content.contactInfo.phone, href: `tel:${content.contactInfo.phone}`, color: "#a78bfa" },
                 { label: t("contact.visit_us"), value: tr(content.contactInfo.address), href: undefined, color: "#34d399" },
               ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    borderLeft: `1px solid ${item.color}33`,
-                    paddingLeft: "1.25rem",
-                  }}
-                >
+                <div key={item.label} style={{ borderLeft: `1px solid ${item.color}33`, paddingLeft: "1.25rem" }}>
                   <p style={{
-                    color: "rgba(255,255,255,0.3)", fontSize: "0.65rem",
+                    color: "var(--s7-fg-muted)", fontSize: "0.65rem",
                     letterSpacing: "0.2em", textTransform: "uppercase",
                     fontFamily: "monospace", marginBottom: "0.5rem",
                   }}>
@@ -148,17 +136,17 @@ export default function Contact() {
                     <a
                       href={item.href}
                       style={{
-                        color: "#fff", fontWeight: 600, fontSize: "0.9rem",
+                        color: "var(--s7-fg)", fontWeight: 600, fontSize: "0.9rem",
                         textDecoration: "none", fontFamily: "'Outfit', sans-serif",
                         transition: "color 0.2s",
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.color = item.color)}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = "#fff")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--s7-fg)")}
                     >
                       {item.value}
                     </a>
                   ) : (
-                    <p style={{ color: "#fff", fontWeight: 600, fontSize: "0.9rem", margin: 0, fontFamily: "'Outfit', sans-serif" }}>
+                    <p style={{ color: "var(--s7-fg)", fontWeight: 600, fontSize: "0.9rem", margin: 0, fontFamily: "'Outfit', sans-serif" }}>
                       {item.value}
                     </p>
                   )}
@@ -168,7 +156,7 @@ export default function Contact() {
               {/* Socials */}
               <div style={{ marginTop: "1rem" }}>
                 <p style={{
-                  color: "rgba(255,255,255,0.2)", fontSize: "0.65rem",
+                  color: "var(--s7-fg-muted)", fontSize: "0.65rem",
                   letterSpacing: "0.25em", textTransform: "uppercase",
                   fontFamily: "monospace", marginBottom: "1rem",
                 }}>
@@ -185,14 +173,14 @@ export default function Contact() {
                       href={s.href}
                       target="_blank"
                       rel="noopener noreferrer"
+                      referrerPolicy="no-referrer"
                       style={{
-                        color: "rgba(255,255,255,0.3)",
-                        fontSize: "0.75rem", textDecoration: "none",
-                        letterSpacing: "0.1em", fontFamily: "monospace",
-                        transition: "color 0.2s",
+                        color: "var(--s7-fg-dim)", fontSize: "0.75rem",
+                        textDecoration: "none", letterSpacing: "0.1em",
+                        fontFamily: "monospace", transition: "color 0.2s",
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.color = CYAN)}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--s7-fg-dim)")}
                     >
                       {s.name} ↗
                     </a>
@@ -215,9 +203,9 @@ export default function Contact() {
                     display: "flex", flexDirection: "column",
                     alignItems: "center", justifyContent: "center",
                     padding: "5rem 2rem", textAlign: "center",
-                    border: "1px solid rgba(255,255,255,0.07)",
+                    border: "1px solid var(--s7-border)",
                     borderRadius: "16px",
-                    background: "rgba(255,255,255,0.02)",
+                    background: "var(--s7-card-bg)",
                     minHeight: "400px",
                   }}
                 >
@@ -230,19 +218,18 @@ export default function Contact() {
                     <CheckCircle2 style={{ color: CYAN, width: "28px", height: "28px" }} />
                   </div>
                   <h3 style={{
-                    fontSize: "1.75rem", fontWeight: 800, color: "#fff",
+                    fontSize: "1.75rem", fontWeight: 800, color: "var(--s7-fg)",
                     fontFamily: "'Outfit', sans-serif", marginBottom: "0.75rem",
                   }}>
                     {t("contact.success_title")}
                   </h3>
-                  <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.95rem", lineHeight: 1.6, marginBottom: "2rem" }}>
+                  <p style={{ color: "var(--s7-fg-dim)", fontSize: "0.95rem", lineHeight: 1.6, marginBottom: "2rem" }}>
                     {t("contact.success_desc")}
                   </p>
                   <button
                     onClick={() => { setIsSubmitted(false); form.reset(); }}
                     style={{
-                      background: "transparent",
-                      border: `1px solid ${CYAN}44`,
+                      background: "transparent", border: `1px solid ${CYAN}44`,
                       color: CYAN, padding: "0.6rem 1.5rem",
                       borderRadius: "9999px", cursor: "pointer",
                       fontSize: "0.875rem", fontFamily: "'Outfit', sans-serif",
@@ -252,14 +239,12 @@ export default function Contact() {
                   </button>
                 </motion.div>
               ) : (
-                <div
-                  style={{
-                    border: "1px solid rgba(255,255,255,0.07)",
-                    borderRadius: "16px",
-                    background: "rgba(255,255,255,0.02)",
-                    padding: "clamp(1.5rem, 4vw, 3rem)",
-                  }}
-                >
+                <div style={{
+                  border: "1px solid var(--s7-border)",
+                  borderRadius: "16px",
+                  background: "var(--s7-card-bg)",
+                  padding: "clamp(1.5rem, 4vw, 3rem)",
+                }}>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }} className="form-2col">
@@ -268,16 +253,11 @@ export default function Contact() {
                           name="name"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
                                 {t("contact.full_name")}
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  placeholder={t("contact.placeholder_name")}
-                                  style={inputStyle}
-                                  className="universe-input"
-                                  {...field}
-                                />
+                                <Input placeholder={t("contact.placeholder_name")} style={inputStyle} className="universe-input" {...field} />
                               </FormControl>
                               <FormMessage style={{ color: "#f87171", fontSize: "0.75rem" }} />
                             </FormItem>
@@ -288,18 +268,11 @@ export default function Contact() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
                                 {t("contact.email")}
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  placeholder={t("contact.placeholder_email")}
-                                  type="email"
-                                  dir="ltr"
-                                  style={inputStyle}
-                                  className="universe-input"
-                                  {...field}
-                                />
+                                <Input placeholder={t("contact.placeholder_email")} type="email" dir="ltr" style={inputStyle} className="universe-input" {...field} />
                               </FormControl>
                               <FormMessage style={{ color: "#f87171", fontSize: "0.75rem" }} />
                             </FormItem>
@@ -313,21 +286,21 @@ export default function Contact() {
                           name="projectType"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
                                 {t("contact.project_type")}
                               </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
-                                  <SelectTrigger className="universe-select" style={inputStyle}>
+                                  <SelectTrigger style={inputStyle}>
                                     <SelectValue placeholder={t("contact.placeholder_select_service")} />
                                   </SelectTrigger>
                                 </FormControl>
-                                <SelectContent style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)" }}>
+                                <SelectContent style={{ background: "var(--s7-bg-alt)", border: "1px solid var(--s7-border)" }}>
                                   {content.services.map((s) => {
                                     const label = typeof s.title === "string" ? s.title : s.title.en;
-                                    return <SelectItem key={s.id} value={label} style={{ color: "#fff" }}>{label}</SelectItem>;
+                                    return <SelectItem key={s.id} value={label} style={{ color: "var(--s7-fg)" }}>{label}</SelectItem>;
                                   })}
-                                  <SelectItem value="Other" style={{ color: "#fff" }}>{t("contact.other")}</SelectItem>
+                                  <SelectItem value="Other" style={{ color: "var(--s7-fg)" }}>{t("contact.other")}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage style={{ color: "#f87171", fontSize: "0.75rem" }} />
@@ -339,20 +312,20 @@ export default function Contact() {
                           name="budgetRange"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
                                 {t("contact.budget")}
                               </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
-                                  <SelectTrigger className="universe-select" style={inputStyle}>
+                                  <SelectTrigger style={inputStyle}>
                                     <SelectValue placeholder={t("contact.placeholder_select_range")} />
                                   </SelectTrigger>
                                 </FormControl>
-                                <SelectContent style={{ background: "#111", border: "1px solid rgba(255,255,255,0.1)" }}>
-                                  <SelectItem value="<10k" style={{ color: "#fff" }}>Under $10,000</SelectItem>
-                                  <SelectItem value="10k-25k" style={{ color: "#fff" }}>$10,000 – $25,000</SelectItem>
-                                  <SelectItem value="25k-50k" style={{ color: "#fff" }}>$25,000 – $50,000</SelectItem>
-                                  <SelectItem value="50k+" style={{ color: "#fff" }}>$50,000+</SelectItem>
+                                <SelectContent style={{ background: "var(--s7-bg-alt)", border: "1px solid var(--s7-border)" }}>
+                                  <SelectItem value="<10k" style={{ color: "var(--s7-fg)" }}>Under $10,000</SelectItem>
+                                  <SelectItem value="10k-25k" style={{ color: "var(--s7-fg)" }}>$10,000 – $25,000</SelectItem>
+                                  <SelectItem value="25k-50k" style={{ color: "var(--s7-fg)" }}>$25,000 – $50,000</SelectItem>
+                                  <SelectItem value="50k+" style={{ color: "var(--s7-fg)" }}>$50,000+</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage style={{ color: "#f87171", fontSize: "0.75rem" }} />
@@ -366,7 +339,7 @@ export default function Contact() {
                         name="message"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                            <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
                               {t("contact.message")}
                             </FormLabel>
                             <FormControl>
@@ -386,12 +359,10 @@ export default function Contact() {
                         type="submit"
                         style={{
                           background: CYAN, color: "#000",
-                          padding: "0.875rem 2rem",
-                          borderRadius: "9999px", fontWeight: 700,
-                          fontSize: "0.9rem", letterSpacing: "0.05em",
-                          border: "none", cursor: "pointer",
-                          fontFamily: "'Outfit', sans-serif",
-                          alignSelf: "flex-start",
+                          padding: "0.875rem 2rem", borderRadius: "9999px",
+                          fontWeight: 700, fontSize: "0.9rem",
+                          letterSpacing: "0.05em", border: "none", cursor: "pointer",
+                          fontFamily: "'Outfit', sans-serif", alignSelf: "flex-start",
                           transition: "transform 0.15s, box-shadow 0.15s",
                         }}
                         onMouseEnter={(e) => {

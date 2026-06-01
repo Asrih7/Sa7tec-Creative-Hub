@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import { ContentProvider } from "@/lib/content-store";
 import { AuthProvider, RequireAuth } from "@/lib/admin-auth";
 import { LanguageProvider } from "@/lib/i18n";
+import { ThemeProvider } from "@/lib/theme";
 import { useEffect } from "react";
 
 import Home from "@/pages/Home";
@@ -36,24 +37,22 @@ function Router() {
 }
 
 function App() {
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <ContentProvider>
-          <AuthProvider>
-            <TooltipProvider>
-              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-                <Router />
-              </WouterRouter>
-              <Toaster />
-            </TooltipProvider>
-          </AuthProvider>
-        </ContentProvider>
-      </LanguageProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <ContentProvider>
+            <AuthProvider>
+              <TooltipProvider>
+                <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                  <Router />
+                </WouterRouter>
+                <Toaster />
+              </TooltipProvider>
+            </AuthProvider>
+          </ContentProvider>
+        </LanguageProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
