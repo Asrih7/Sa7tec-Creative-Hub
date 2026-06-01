@@ -64,6 +64,7 @@ function SceneEntry() {
 
   return (
     <section
+      id="home"
       onMouseMove={handleMouseMove}
       style={{
         minHeight: "100dvh",
@@ -240,6 +241,7 @@ function SceneManifesto() {
 
   return (
     <section
+      id="studio"
       ref={ref}
       style={{ background: "var(--s7-bg)", padding: "18vh 5vw", position: "relative", overflow: "hidden" }}
     >
@@ -318,7 +320,7 @@ function SceneProducts() {
   ];
 
   return (
-    <section style={{ background: "var(--s7-bg-alt)", padding: "16vh 5vw", position: "relative", overflow: "hidden" }}>
+    <section id="services" style={{ background: "var(--s7-bg-alt)", padding: "16vh 5vw", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: "5vw", right: "5vw", height: "1px", background: "var(--s7-separator)" }} />
       <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
         <motion.p
@@ -463,7 +465,7 @@ function SceneGame() {
   ];
 
   return (
-    <section style={{ background: "var(--s7-bg)", position: "relative", overflow: "hidden", padding: "16vh 5vw" }}>
+    <section id="games" style={{ background: "var(--s7-bg)", position: "relative", overflow: "hidden", padding: "16vh 5vw" }}>
       <div style={{ position: "absolute", top: 0, left: "5vw", right: "5vw", height: "1px", background: "var(--s7-separator)" }} />
       <div aria-hidden="true" style={{
         position: "absolute", right: "-10%", top: "50%", transform: "translateY(-50%)",
@@ -597,7 +599,7 @@ function SceneCapabilities() {
   ];
 
   return (
-    <section style={{ background: "var(--s7-bg-alt)", padding: "16vh 5vw", position: "relative", overflow: "hidden" }}>
+    <section id="capabilities" style={{ background: "var(--s7-bg-alt)", padding: "16vh 5vw", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: "5vw", right: "5vw", height: "1px", background: "var(--s7-separator)" }} />
       <GridDots opacity={0.03} />
 
@@ -746,7 +748,7 @@ function SceneNumbers() {
   ];
 
   return (
-    <section style={{ background: "var(--s7-bg)", padding: "16vh 5vw", position: "relative", overflow: "hidden" }}>
+    <section id="numbers" style={{ background: "var(--s7-bg)", padding: "16vh 5vw", position: "relative", overflow: "hidden" }}>
       <div style={{ position: "absolute", top: 0, left: "5vw", right: "5vw", height: "1px", background: "var(--s7-separator)" }} />
       <div aria-hidden="true" style={{
         position: "absolute", inset: 0, pointerEvents: "none",
@@ -802,6 +804,7 @@ function SceneTransmit() {
 
   return (
     <section
+      id="transmit"
       ref={ref}
       style={{
         background: "var(--s7-bg)", minHeight: "70vh",
