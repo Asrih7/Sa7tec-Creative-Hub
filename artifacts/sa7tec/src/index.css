@@ -158,3 +158,63 @@ html[dir="rtl"] .lucide-chevron-right {
 html[dir="rtl"] body {
   letter-spacing: 0;
 }
+
+/* Responsive nav utilities */
+.hidden-mobile { display: flex; }
+.show-mobile   { display: none; }
+@media (max-width: 768px) {
+  .hidden-mobile { display: none !important; }
+  .show-mobile   { display: flex !important; }
+}
+
+/* Universe page body override */
+body {
+  background: #000;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Contact page responsive grid */
+.contact-grid {
+  grid-template-columns: 1fr 2fr;
+}
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+.form-2col {
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 640px) {
+  .form-2col {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Universe-theme inputs override browser defaults */
+.universe-input,
+.universe-input:focus,
+.universe-select,
+.universe-select:focus {
+  background: rgba(255,255,255,0.03) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+}
+.universe-input::placeholder {
+  color: rgba(255,255,255,0.2) !important;
+}
+.universe-input:focus,
+.universe-select:focus {
+  border-color: rgba(34,211,238,0.4) !important;
+  box-shadow: 0 0 0 2px rgba(34,211,238,0.08) !important;
+  outline: none !important;
+}
+
+/* Patch: public pages body background */
+.dark body {
+  background-color: #000 !important;
+}

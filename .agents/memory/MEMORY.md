@@ -1,0 +1,1 @@
+- [SA7TEC design system](sa7tec-design.md) — pure-black immersive universe aesthetic; NOT agency template
