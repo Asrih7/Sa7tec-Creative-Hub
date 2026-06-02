@@ -18,18 +18,22 @@ import AdminDashboard from "@/pages/admin/Dashboard";
 const queryClient = new QueryClient();
 
 function Router() {
+  const adminEnabled = import.meta.env.VITE_ENABLE_ADMIN !== "false";
+
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/contact" component={Contact} />
       <Route path="/games/rubiks-race" component={RubiksRace} />
 
-      <Route path="/admin" component={AdminLogin} />
-      <Route path="/admin/dashboard">
-        <RequireAuth>
-          <AdminDashboard />
-        </RequireAuth>
-      </Route>
+      {adminEnabled && <Route path="/admin" component={AdminLogin} />}
+      {adminEnabled && (
+        <Route path="/admin/dashboard">
+          <RequireAuth>
+            <AdminDashboard />
+          </RequireAuth>
+        </Route>
+      )}
 
       <Route component={NotFound} />
     </Switch>

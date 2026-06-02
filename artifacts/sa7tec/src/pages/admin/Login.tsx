@@ -16,9 +16,9 @@ export default function AdminLogin() {
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(password)) {
+    if (await login(password)) {
       toast({
         title: t("admin.toast_granted"),
         description: t("admin.toast_granted_desc"),

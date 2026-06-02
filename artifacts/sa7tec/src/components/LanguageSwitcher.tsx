@@ -1,49 +1,106 @@
-import { Globe, Check } from "lucide-react";
 import { useLanguage, LANGUAGES, type Lang } from "@/lib/i18n";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import type { ReactNode } from "react";
 
 type Variant = "header" | "drawer" | "admin";
 
+const FLAG_MAP: Record<string, ReactNode> = {
+  en: (
+    <svg width="24" height="24" viewBox="0 0 60 30" style={{ borderRadius: "4px", overflow: "hidden" }}>
+      <rect width="60" height="30" fill="#012169" />
+      <path d="M0 0L60 30M60 0L0 30" stroke="white" strokeWidth="6" />
+      <path d="M0 0L60 30M60 0L0 30" stroke="#C8102E" strokeWidth="4" />
+      <path d="M30 0v30M0 15h60" stroke="white" strokeWidth="10" />
+      <path d="M30 0v30M0 15h60" stroke="#C8102E" strokeWidth="6" />
+    </svg>
+  ),
+  fr: (
+    <svg width="24" height="24" viewBox="0 0 60 30" style={{ borderRadius: "4px" }}>
+      <rect width="20" height="30" fill="#002395" />
+      <rect x="20" width="20" height="30" fill="white" />
+      <rect x="40" width="20" height="30" fill="#ED2939" />
+    </svg>
+  ),
+  ar: (
+    <svg width="24" height="24" viewBox="0 0 60 30" style={{ borderRadius: "4px", overflow: "hidden" }}>
+      <rect width="60" height="30" fill="#006C35" />
+      <g transform="translate(5, 3)">
+        <text x="0" y="7" fontSize="6" fill="white" fontFamily="Arial, sans-serif" fontWeight="bold">
+          الله
+        </text>
+      </g>
+      <line x1="8" y1="18" x2="48" y2="18" stroke="white" strokeWidth="1.5" />
+      <path d="M 48 18 Q 50 16 52 18" stroke="white" strokeWidth="1.2" fill="none" />
+    </svg>
+  ),
+};
+
 export function LanguageSwitcher({ variant = "header" }: { variant?: Variant }) {
   const { lang, setLang } = useLanguage();
-  const current = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
 
-  const triggerClass =
-    variant === "header"
-      ? "h-9 px-3 rounded-full border-white/10 bg-white/5 hover:bg-white/10 text-foreground gap-2"
-      : variant === "admin"
-        ? "h-9 px-3 rounded-md border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 gap-2"
-        : "h-12 px-4 rounded-full border-border w-full justify-between";
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className={triggerClass} aria-label="Change language">
-          <Globe className="w-4 h-4" />
-          <span className="text-sm font-medium uppercase">{current.code}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[180px]">
+  if (variant === "header") {
+    return (
+      <div style={{
+        display: "flex", gap: "0.5rem", alignItems: "center",
+      }}>
         {LANGUAGES.map((l) => (
-          <DropdownMenuItem
+          <motion.button
             key={l.code}
-            onSelect={() => setLang(l.code as Lang)}
-            className="flex items-center justify-between gap-3 cursor-pointer"
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setLang(l.code as Lang)}
+            style={{
+              background: lang === l.code ? "rgba(34, 211, 238, 0.2)" : "transparent",
+              border: lang === l.code ? "2px solid rgba(34, 211, 238, 0.6)" : "1px solid var(--s7-border-2)",
+              color: "var(--s7-fg)",
+              width: "42px", height: "42px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "background 0.2s, border-color 0.2s, transform 0.2s",
+              padding: 0,
+            }}
+            aria-label={`Switch to ${l.label}`}
+            title={l.label}
           >
-            <div className="flex flex-col">
-              <span className="font-medium">{l.nativeLabel}</span>
-              <span className="text-xs text-muted-foreground">{l.label}</span>
-            </div>
-            {l.code === lang && <Check className="w-4 h-4 text-primary" />}
-          </DropdownMenuItem>
+            {FLAG_MAP[l.code]}
+          </motion.button>
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </div>
+    );
+  }
+
+  // For drawer and admin variants, show flags with labels
+  return (
+    <div style={{ display: "flex", gap: "0.5rem", flexDirection: "column" }}>
+      {LANGUAGES.map((l) => (
+        <button
+          key={l.code}
+          onClick={() => setLang(l.code as Lang)}
+          style={{
+            background: lang === l.code ? "var(--s7-card-hover)" : "transparent",
+            border: `1px solid ${lang === l.code ? "var(--s7-border)" : "var(--s7-border-2)"}`,
+            color: "var(--s7-fg)",
+            padding: "0.5rem 1rem",
+            borderRadius: "8px",
+            cursor: "pointer",
+            transition: "background 0.2s, border-color 0.2s",
+            width: "100%",
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
+          }}
+          title={l.label}
+        >
+          <div style={{ width: "24px", height: "24px" }}>
+            {FLAG_MAP[l.code]}
+          </div>
+          {l.label}
+        </button>
+      ))}
+    </div>
   );
 }
+

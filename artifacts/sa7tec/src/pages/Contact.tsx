@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,10 +11,21 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { normalizeInput, RateLimiter, validateContactForm } from "@/lib/security";
 
 const CYAN = "#22d3ee";
+
+// EmailJS Configuration
+const EJ_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "JzJlbmIoQ5-ujtIgN";
+const EJ_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "service_6womk7q";
+const EJ_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "template_s2wirfx";
+const contactRateLimiter = new RateLimiter(
+  "sa7tec_contact_attempts",
+  Number(import.meta.env.VITE_CONTACT_FORM_RATE_LIMIT || 5),
+  Number(import.meta.env.VITE_CONTACT_FORM_RATE_WINDOW || 3600000),
+);
 
 const inputStyle: React.CSSProperties = {
   background: "var(--s7-input-bg)",
@@ -34,13 +45,38 @@ export default function Contact() {
   const { toast } = useToast();
   const { t, tr } = useLanguage();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [emailJsReady, setEmailJsReady] = useState(false);
+
+  // Initialize EmailJS
+  useEffect(() => {
+    const initEmailJS = () => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.referrerPolicy = "no-referrer";
+      script.onload = () => {
+        (window as any).emailjs?.init(EJ_PUBLIC_KEY);
+        setEmailJsReady(true);
+      };
+      script.onerror = () => {
+        console.warn("EmailJS failed to load");
+        setEmailJsReady(false);
+      };
+      document.head.appendChild(script);
+    };
+    
+    initEmailJS();
+  }, []);
 
   const formSchema = z.object({
-    name: z.string().min(2, t("contact.err_name")),
-    email: z.string().email(t("contact.err_email")),
-    projectType: z.string().min(1, t("contact.err_project")),
-    budgetRange: z.string().min(1, t("contact.err_budget")),
-    message: z.string().min(10, t("contact.err_message")),
+    name: z.string().min(2, t("contact.err_name")).max(100),
+    email: z.string().email(t("contact.err_email")).max(254),
+    projectType: z.string().min(1, t("contact.err_project")).max(80),
+    budgetRange: z.string().min(1, t("contact.err_budget")).max(40),
+    message: z.string().min(10, t("contact.err_message")).max(5000),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,10 +84,79 @@ export default function Contact() {
     defaultValues: { name: "", email: "", projectType: "", budgetRange: "", message: "" },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    addSubmission(values);
-    setIsSubmitted(true);
-    toast({ title: t("contact.toast_sent"), description: t("contact.toast_sent_desc") });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    setSubmitError(null);
+    
+    try {
+      if (!contactRateLimiter.isAllowed()) {
+        throw new Error("Too many submissions. Please try again later.");
+      }
+
+      const safeValues = {
+        name: normalizeInput(values.name, 100),
+        email: normalizeInput(values.email, 254).toLowerCase(),
+        projectType: normalizeInput(values.projectType, 80),
+        budgetRange: normalizeInput(values.budgetRange, 40),
+        message: normalizeInput(values.message, 5000),
+      };
+
+      const validation = validateContactForm(safeValues);
+      if (!validation.valid) {
+        throw new Error(validation.errors[0] || "Invalid form data.");
+      }
+
+      // Store submission locally (always succeeds)
+      addSubmission(safeValues);
+      
+      // Try to send email via EmailJS
+      if (emailJsReady && (window as any).emailjs) {
+        try {
+          await (window as any).emailjs.send(EJ_SERVICE_ID, EJ_TEMPLATE_ID, {
+            from_name: safeValues.name,
+            reply_to: safeValues.email,
+            company: safeValues.budgetRange || "N/A",
+            enquiry_type: safeValues.projectType || "General",
+            message: safeValues.message,
+          });
+          
+          // Success - email sent
+          setIsSubmitted(true);
+          toast({ 
+            title: "Sent",
+            description: `I'll reply to ${safeValues.email} within 24h.`
+          });
+        } catch (emailError) {
+          console.error("EmailJS send failed:", emailError);
+          // Email failed but form saved - still show success with fallback
+          setIsSubmitted(true);
+          toast({
+            title: "Message Saved",
+            description: "Email delivery failed, but we have your message. We'll be in touch!",
+            variant: "destructive",
+          });
+        }
+      } else {
+        // EmailJS not ready but form saved - show success anyway
+        setIsSubmitted(true);
+        toast({
+          title: "Message Received",
+          description: "We'll follow up with you shortly at " + safeValues.email,
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      const message = error instanceof Error ? error.message : "An error occurred. Please try again.";
+      setSubmitError(message);
+      toast({
+        title: "Error",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -164,7 +269,6 @@ export default function Contact() {
                 </p>
                 <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                   {[
-                    { name: "Twitter", href: content.contactInfo.social.twitter },
                     { name: "LinkedIn", href: content.contactInfo.social.linkedin },
                     { name: "Instagram", href: content.contactInfo.social.instagram },
                   ].map((s) => (
@@ -355,26 +459,43 @@ export default function Contact() {
                         )}
                       />
 
+                      {submitError && (
+                        <div style={{
+                          display: "flex", gap: "0.75rem", alignItems: "center",
+                          padding: "0.75rem 1rem", borderRadius: "8px",
+                          background: "#dc26263d", border: "1px solid #dc2626",
+                          color: "#fca5a5",
+                        }}>
+                          <AlertCircle size={18} />
+                          <span style={{ fontSize: "0.9rem" }}>{submitError}</span>
+                        </div>
+                      )}
+
                       <button
                         type="submit"
+                        disabled={isLoading}
                         style={{
-                          background: CYAN, color: "#000",
+                          background: isLoading ? "rgba(34, 211, 238, 0.5)" : CYAN,
+                          color: "#000",
                           padding: "0.875rem 2rem", borderRadius: "9999px",
                           fontWeight: 700, fontSize: "0.9rem",
-                          letterSpacing: "0.05em", border: "none", cursor: "pointer",
+                          letterSpacing: "0.05em", border: "none", cursor: isLoading ? "not-allowed" : "pointer",
                           fontFamily: "'Outfit', sans-serif", alignSelf: "flex-start",
-                          transition: "transform 0.15s, box-shadow 0.15s",
+                          transition: "transform 0.15s, box-shadow 0.15s, background 0.2s",
+                          opacity: isLoading ? 0.7 : 1,
                         }}
                         onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.03)";
-                          (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 30px rgba(34,211,238,0.35)`;
+                          if (!isLoading) {
+                            (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.03)";
+                            (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 30px rgba(34,211,238,0.35)`;
+                          }
                         }}
                         onMouseLeave={(e) => {
                           (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
                           (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
                         }}
                       >
-                        {t("contact.send")} →
+                        {isLoading ? "Sending..." : t("contact.send")} {!isLoading && "→"}
                       </button>
                     </form>
                   </Form>

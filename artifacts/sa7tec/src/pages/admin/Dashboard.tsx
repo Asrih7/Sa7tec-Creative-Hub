@@ -17,7 +17,7 @@ import { StatsEditor } from "@/components/admin/StatsEditor";
 import { ProcessEditor } from "@/components/admin/ProcessEditor";
 import { TestimonialsEditor } from "@/components/admin/TestimonialsEditor";
 import { MediaEditor } from "@/components/admin/MediaEditor";
-import { ADMIN_CONFIG } from "@/lib/admin-config";
+import { changeAdminPassword } from "@/lib/admin-auth";
 
 export default function Dashboard() {
   const { content, updateContent, deleteSubmission } = useContent();
@@ -48,14 +48,9 @@ export default function Dashboard() {
     downloadAnchorNode.remove();
   };
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    const stored = localStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD) || ADMIN_CONFIG.DEFAULT_PASSWORD;
-    if (pwd.current !== stored) {
-      toast({ title: t("admin.toast_denied"), description: t("admin.password_wrong"), variant: "destructive" });
-      return;
-    }
-    if (pwd.next.length < 6) {
+    if (pwd.next.length < 12) {
       toast({ title: t("admin.toast_denied"), description: t("admin.password_short"), variant: "destructive" });
       return;
     }
@@ -63,7 +58,11 @@ export default function Dashboard() {
       toast({ title: t("admin.toast_denied"), description: t("admin.password_mismatch"), variant: "destructive" });
       return;
     }
-    localStorage.setItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD, pwd.next);
+    const updated = await changeAdminPassword(pwd.current, pwd.next);
+    if (!updated) {
+      toast({ title: t("admin.toast_denied"), description: t("admin.password_wrong"), variant: "destructive" });
+      return;
+    }
     setPwd({ current: "", next: "", confirm: "" });
     toast({ title: t("admin.password_updated"), description: t("admin.password_updated_desc") });
   };
@@ -210,16 +209,7 @@ export default function Dashboard() {
                 />
 
                 <h4 className="font-semibold mt-6 mb-2">{t("admin.social_links")}</h4>
-                <div className="grid gap-2">
-                  <Label>{t("admin.field.twitter")}</Label>
-                  <Input
-                    value={contactInfo.social.twitter}
-                    onChange={(e) =>
-                      setContactInfo({ ...contactInfo, social: { ...contactInfo.social, twitter: e.target.value } })
-                    }
-                    className="bg-zinc-950 border-zinc-800"
-                  />
-                </div>
+              
                 <div className="grid gap-2">
                   <Label>{t("admin.field.linkedin")}</Label>
                   <Input

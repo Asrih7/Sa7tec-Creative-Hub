@@ -1,47 +1,78 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useLocation } from "wouter";
 import { ADMIN_CONFIG } from "./admin-config";
+import { hashPassword, RateLimiter, verifyPassword } from "./security";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  login: (password: string) => boolean;
+  login: (password: string) => Promise<boolean>;
   logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+function hasValidSession() {
+  const authenticated = sessionStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.SESSION) === "true";
+  const expiresAt = Number(sessionStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.SESSION_EXPIRES) || 0);
+  return authenticated && expiresAt > Date.now();
+}
+
+async function ensureInitialPassword() {
+  const stored = localStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD);
+  if (stored || !ADMIN_CONFIG.INITIAL_PASSWORD) return;
+  localStorage.setItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD, await hashPassword(ADMIN_CONFIG.INITIAL_PASSWORD));
+}
+
+function startSession() {
+  sessionStorage.setItem(ADMIN_CONFIG.STORAGE_KEYS.SESSION, "true");
+  sessionStorage.setItem(
+    ADMIN_CONFIG.STORAGE_KEYS.SESSION_EXPIRES,
+    String(Date.now() + ADMIN_CONFIG.SESSION_TTL_MS),
+  );
+}
+
+export async function changeAdminPassword(currentPassword: string, nextPassword: string): Promise<boolean> {
+  await ensureInitialPassword();
+  const stored = localStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD);
+  const validCurrent = await verifyPassword(currentPassword, stored);
+  if (!validCurrent) return false;
+  localStorage.setItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD, await hashPassword(nextPassword));
+  return true;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return sessionStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.SESSION) === "true";
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => hasValidSession());
 
   useEffect(() => {
-    // Initialize default password if missing
-    if (!localStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD)) {
-      localStorage.setItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD, ADMIN_CONFIG.DEFAULT_PASSWORD);
-    }
+    ensureInitialPassword();
   }, []);
 
-  const login = (password: string) => {
-    const correctPwd = localStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD) || ADMIN_CONFIG.DEFAULT_PASSWORD;
-    if (password === correctPwd) {
-      sessionStorage.setItem(ADMIN_CONFIG.STORAGE_KEYS.SESSION, "true");
-      setIsAuthenticated(true);
-      return true;
+  const login = async (password: string) => {
+    const limiter = new RateLimiter(ADMIN_CONFIG.STORAGE_KEYS.LOGIN_ATTEMPTS, 5, 15 * 60 * 1000);
+    if (!limiter.isAllowed()) return false;
+
+    await ensureInitialPassword();
+    const stored = localStorage.getItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD);
+    const valid = await verifyPassword(password, stored);
+    if (!valid) return false;
+
+    if (stored && !stored.startsWith("sha256:")) {
+      localStorage.setItem(ADMIN_CONFIG.STORAGE_KEYS.PASSWORD, await hashPassword(password));
     }
-    return false;
+
+    limiter.reset();
+    startSession();
+    setIsAuthenticated(true);
+    return true;
   };
 
   const logout = () => {
     sessionStorage.removeItem(ADMIN_CONFIG.STORAGE_KEYS.SESSION);
+    sessionStorage.removeItem(ADMIN_CONFIG.STORAGE_KEYS.SESSION_EXPIRES);
     setIsAuthenticated(false);
   };
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ isAuthenticated, login, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
