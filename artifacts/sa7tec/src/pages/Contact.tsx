@@ -27,6 +27,15 @@ const contactRateLimiter = new RateLimiter(
   Number(import.meta.env.VITE_CONTACT_FORM_RATE_WINDOW || 3600000),
 );
 
+type EmailJsClient = {
+  init: (publicKey: string) => void;
+  send: (serviceId: string, templateId: string, params: Record<string, string>) => Promise<{ status: number; text: string }>;
+};
+
+function getEmailJs() {
+  return (window as Window & { emailjs?: EmailJsClient }).emailjs;
+}
+
 const inputStyle: React.CSSProperties = {
   background: "var(--s7-input-bg)",
   border: "1px solid var(--s7-border-2)",
@@ -52,13 +61,31 @@ export default function Contact() {
   // Initialize EmailJS
   useEffect(() => {
     const initEmailJS = () => {
+      if (!EJ_PUBLIC_KEY || !EJ_SERVICE_ID || !EJ_TEMPLATE_ID) {
+        console.warn("EmailJS is not configured. Set VITE_EMAILJS_PUBLIC_KEY, VITE_EMAILJS_SERVICE_ID, and VITE_EMAILJS_TEMPLATE_ID.");
+        setEmailJsReady(false);
+        return;
+      }
+
+      const existingClient = getEmailJs();
+      if (existingClient) {
+        existingClient.init(EJ_PUBLIC_KEY);
+        setEmailJsReady(true);
+        return;
+      }
+
       const script = document.createElement("script");
       script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
       script.async = true;
       script.crossOrigin = "anonymous";
       script.referrerPolicy = "no-referrer";
       script.onload = () => {
-        (window as any).emailjs?.init(EJ_PUBLIC_KEY);
+        const client = getEmailJs();
+        if (!client) {
+          setEmailJsReady(false);
+          return;
+        }
+        client.init(EJ_PUBLIC_KEY);
         setEmailJsReady(true);
       };
       script.onerror = () => {
@@ -106,45 +133,41 @@ export default function Contact() {
         throw new Error(validation.errors[0] || "Invalid form data.");
       }
 
-      // Store submission locally (always succeeds)
+      // Store submission locally for the admin panel backup.
       addSubmission(safeValues);
-      
-      // Try to send email via EmailJS
-      if (emailJsReady && (window as any).emailjs) {
-        try {
-          await (window as any).emailjs.send(EJ_SERVICE_ID, EJ_TEMPLATE_ID, {
-            from_name: safeValues.name,
-            reply_to: safeValues.email,
-            company: safeValues.budgetRange || "N/A",
-            enquiry_type: safeValues.projectType || "General",
-            message: safeValues.message,
-          });
-          
-          // Success - email sent
-          setIsSubmitted(true);
-          toast({ 
-            title: "Sent",
-            description: `I'll reply to ${safeValues.email} within 24h.`
-          });
-        } catch (emailError) {
-          console.error("EmailJS send failed:", emailError);
-          // Email failed but form saved - still show success with fallback
-          setIsSubmitted(true);
-          toast({
-            title: "Message Saved",
-            description: "Email delivery failed, but we have your message. We'll be in touch!",
-            variant: "destructive",
-          });
-        }
-      } else {
-        // EmailJS not ready but form saved - show success anyway
-        setIsSubmitted(true);
-        toast({
-          title: "Message Received",
-          description: "We'll follow up with you shortly at " + safeValues.email,
-          variant: "default",
-        });
+
+      const emailjs = getEmailJs();
+      if (!emailJsReady || !emailjs) {
+        throw new Error("Email service is not ready. Please try again in a few seconds or contact us directly by email.");
       }
+
+      const response = await emailjs.send(EJ_SERVICE_ID, EJ_TEMPLATE_ID, {
+        to_email: content.contactInfo.email,
+        to_name: "SA7TEC",
+        name: safeValues.name,
+        email: safeValues.email,
+        from_name: safeValues.name,
+        from_email: safeValues.email,
+        reply_to: safeValues.email,
+        user_email: safeValues.email,
+        company: safeValues.budgetRange || "N/A",
+        budget_range: safeValues.budgetRange || "N/A",
+        enquiry_type: safeValues.projectType || "General",
+        project_type: safeValues.projectType || "General",
+        message: safeValues.message,
+        sent_at: new Date().toISOString(),
+        website: window.location.origin,
+      });
+
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(`Email service rejected the message: ${response.text || response.status}`);
+      }
+
+      setIsSubmitted(true);
+      toast({
+        title: "Email sent",
+        description: `Your message was sent to ${content.contactInfo.email}.`,
+      });
     } catch (error) {
       console.error("Form submission error:", error);
       const message = error instanceof Error ? error.message : "An error occurred. Please try again.";

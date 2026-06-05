@@ -687,9 +687,7 @@ function ContactFooter() {
           <a href={content.contactInfo.social.instagram} aria-label="Instagram">
             <Instagram size={18} />
           </a>
-          <a href={content.contactInfo.social.github} aria-label="GitHub">
-            <Github size={18} />
-          </a>
+       
         </div>
       </div>
       <p className="s7-copyright">{t("home.copyright").replace("{year}", String(year))}</p>
