@@ -36,7 +36,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   const links = [
     { label: t("nav.studio"), id: "studio" },
     { label: t("nav.services"), id: "services" },
-    { label: t("nav.games"), id: "games" },
+    { label: t("nav.projects"), id: "projects" },
     { label: t("nav.capabilities"), id: "capabilities" },
     { label: t("nav.numbers"), id: "numbers" },
   ];
@@ -44,7 +44,10 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   const themeLabel = isDark ? t("theme.toggle_light") : t("theme.toggle_dark");
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--s7-bg)", color: "var(--s7-fg)", overflowX: "clip" }}>
+    <div className="site-shell" style={{ minHeight: "100vh", background: "var(--s7-bg)", color: "var(--s7-fg)", overflowX: "clip" }}>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <header
         style={{
           position: "fixed",
@@ -90,12 +93,14 @@ export function PublicLayout({ children }: { children: ReactNode }) {
             <img
               src={assetSrc("/assets/sa7tec-logo.jpg")}
               alt="SA7TEC"
+              loading="lazy"
+              decoding="async"
               style={{ width: "2.75rem", height: "2.75rem", objectFit: "cover", borderRadius: "0.8rem" }}
             />
             <span style={{ fontSize: "1.02rem", fontWeight: 950, letterSpacing: "0" }}>SA7TEC</span>
           </button>
 
-          <nav className="desktop-nav" style={{ justifySelf: "center", alignItems: "center", gap: "0.35rem" }}>
+          <nav className="desktop-nav" aria-label="Primary navigation" style={{ justifySelf: "center", alignItems: "center", gap: "0.35rem" }}>
             {links.map((link) => (
               <button
                 key={link.id}
@@ -225,7 +230,7 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               overflowY: "auto",
             }}
           >
-            <nav style={{ display: "grid", gap: "0.4rem" }}>
+            <nav style={{ display: "grid", gap: "0.4rem" }} aria-label="Mobile navigation">
               {links.map((link, index) => (
                 <button
                   key={link.id}
@@ -258,7 +263,9 @@ export function PublicLayout({ children }: { children: ReactNode }) {
         ) : null}
       </AnimatePresence>
 
-      {children}
+      <main id="main-content" tabIndex={-1}>
+        {children}
+      </main>
       <WhatsAppButton />
     </div>
   );

@@ -2,6 +2,7 @@ import { Plus, Save } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { LocalizedField } from "@/components/admin/LocalizedField";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { CollectionToolbar, reorder } from "@/components/admin/CollectionToolbar";
@@ -29,6 +30,7 @@ export function PortfolioEditor() {
         title: { en: "New project", fr: "Nouveau projet", ar: "مشروع جديد" },
         description: { en: "Describe this project.", fr: "Décrivez ce projet.", ar: "صف هذا المشروع." },
         imageUrl: "",
+        linkUrl: "",
       },
     ]);
 
@@ -86,6 +88,15 @@ export function PortfolioEditor() {
                 value={item.imageUrl}
                 onChange={(v) => update(idx, { imageUrl: v })}
               />
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">{t("admin.field.link_url")}</label>
+                <Input
+                  value={item.linkUrl || ""}
+                  onChange={(event) => update(idx, { linkUrl: event.target.value })}
+                  placeholder="https://medium.com/..."
+                  className="bg-zinc-950 border-zinc-800"
+                />
+              </div>
             </div>
           ))
         )}

@@ -31,21 +31,13 @@ export interface SiteContent {
     iconName: string;
     color: string;
   }>;
-  games: Array<{
-    id: string;
-    title: LocalizedString;
-    subtitle: LocalizedString;
-    description: LocalizedString;
-    statusBadge: LocalizedString;
-    imageUrl: string;
-    screenshots?: string[];
-  }>;
   portfolioItems: Array<{
     id: string;
     category: LocalizedString;
     title: LocalizedString;
     description: LocalizedString;
     imageUrl: string;
+    linkUrl?: string;
   }>;
   testimonials: Array<{
     id: string;
@@ -191,71 +183,70 @@ const DEFAULT_CONTENT: SiteContent = {
       color: "#14b8a6",
     },
   ],
-  games: [
-    {
-      id: "rubiks-race",
-      title: { en: "Rubik's Race", fr: "Rubik's Race", ar: "Rubik's Race" },
-      subtitle: {
-        en: "The Ultimate Puzzle Challenge",
-        fr: "Le défi de puzzle ultime",
-        ar: "تحدي الألغاز الأقصى",
-      },
-      description: {
-        en: "A colorful timed puzzle game with 5,000 levels. Can you beat the clock?",
-        fr: "Un puzzle coloré chronométré de 5 000 niveaux. Battras-tu le chrono ?",
-        ar: "لعبة ألغاز ملونة محدودة بالوقت تضم 5000 مستوى. هل تستطيع التغلب على الساعة؟",
-      },
-      statusBadge: { en: "Available Now", fr: "Disponible", ar: "متاحة الآن" },
-      imageUrl: "/assets/rubiks-challenge.jpg",
-      screenshots: [
-        "/assets/rubiks-game.jpg",
-        "/assets/rubiks-loading.jpg",
-        "/assets/rubiks-challenge.jpg",
-      ],
-    },
-  ],
   portfolioItems: [
     {
       id: "p1",
-      category: { en: "Mobile Game", fr: "Jeu mobile", ar: "لعبة محمول" },
-      title: { en: "Rubik's Race", fr: "Rubik's Race", ar: "Rubik's Race" },
-      description: { en: "5,000-level puzzle game with 1M+ downloads on app stores.", fr: "Jeu de puzzle avec plus de 5 000 niveaux et 1M+ téléchargements.", ar: "لعبة ألغاز مع أكثر من 5000 مستوى و1M+ تنزيل." },
-      imageUrl: "/assets/rubiks-challenge.jpg",
+      category: { en: "Learning Platform", fr: "Plateforme d'apprentissage", ar: "منصة التعلم" },
+      title: { en: "We Built a Free Platform to Learn Angular and Ace Your Next Interview", fr: "Nous avons construit une plateforme gratuite pour apprendre Angular et réussir votre prochain entretien", ar: "لقد بنينا منصة مجانية لتعلم Angular والنجاح في مقابلتك القادمة" },
+      description: { en: "Stop googling scattered tutorials. Everything you need to master Angular is in one place.", fr: "Arrêtez de chercher sur Google des tutoriels dispersés. Tout ce dont vous avez besoin pour maîtriser Angular est en un seul endroit.", ar: "توقف عن البحث عن دروس متفرقة. كل ما تحتاجه لإتقان Angular في مكان واحد." },
+      imageUrl: "/assets/medium-projects/angular-courses-portal.png",
+      linkUrl: "https://medium.com/@asrihsoufiane/i-built-a-free-platform-to-learn-angular-and-ace-your-next-interview-heres-why-you-need-it-2bd64117b2e9",
     },
     {
       id: "p2",
-      category: { en: "E-Commerce", fr: "E-commerce", ar: "تجارة إلكترونية" },
-      title: { en: "ShopSync", fr: "ShopSync", ar: "ShopSync" },
-      description: { en: "Next-gen retail app with AI-powered recommendations and seamless checkout.", fr: "Application de détail nouvelle génération avec recommandations alimentées par l'IA.", ar: "تطبيق تجزئة من الجيل الجديد مع توصيات قائمة على الذكاء الاصطناعي." },
-      imageUrl: "/assets/portfolio-ecommerce.png",
-    },
-    {
-      id: "p3",
-      category: { en: "Education", fr: "Éducation", ar: "تعليم" },
-      title: { en: "LearnLogic", fr: "LearnLogic", ar: "LearnLogic" },
-      description: { en: "Gamified learning platform with 50K+ active students and adaptive lessons.", fr: "Plateforme d'apprentissage ludifiée avec 50K+ étudiants actifs.", ar: "منصة تعلم بأسلوب الألعاب مع أكثر من 50K مستخدم نشط." },
-      imageUrl: "/assets/portfolio-education.png",
+      category: { en: "Web Development", fr: "Développement web", ar: "تطوير الويب" },
+      title: { en: "DeviceFrame Pro: Revolutionizing Web Development Testing in 2026", fr: "DeviceFrame Pro: Révolutionner les tests de développement web en 2026", ar: "DeviceFrame Pro: تحويل اختبار تطوير الويب في 2026" },
+      description: { en: "The professional's choice for cross-device development and responsive testing workflows.", fr: "Le choix du professionnel pour le développement multi-appareils et les flux de test réactifs.", ar: "اختيار المحترف لتطوير متعدد الأجهزة وسير عمل الاختبار المتجاوب." },
+      imageUrl: "/assets/medium-projects/deviceframe-pro.png",
+      linkUrl: "https://medium.com/@asrihsoufiane/deviceframe-pro-revolutionizing-web-development-testing-in-2026-3cfefc97c204",
     },
     {
       id: "p4",
-      category: { en: "Health & Wellness", fr: "Santé", ar: "صحة" },
-      title: { en: "FitFlow", fr: "FitFlow", ar: "FitFlow" },
-      description: { en: "AI-powered fitness app with personalized workout plans and real-time tracking.", fr: "Application de fitness alimentée par l'IA avec plans d'entraînement personnalisés.", ar: "تطبيق لياقة بقوة الذكاء الاصطناعي مع خطط تدريب شخصية." },
-      imageUrl: "/assets/portfolio-health.png",
+      category: { en: "Developer Resources", fr: "Ressources pour développeurs", ar: "موارد المطورين" },
+      title: { en: "Frontend Cheat Sheets: Your Ultimate Developer Reference Hub", fr: "Aide-mémoire Frontend: Votre centre de référence ultime pour développeurs", ar: "Frontend Cheat Sheets: Your Ultimate Developer Reference Hub" },
+      description: { en: "A comprehensive application consolidating essential frontend references in one searchable interface.", fr: "Une application complète consolidant les références frontend essentielles dans une interface recherchable.", ar: "تطبيق شامل يوحد المراجع الأمامية الأساسية في واجهة قابلة للبحث." },
+      imageUrl: "/assets/medium-projects/frontend-cheat-sheets.png",
+      linkUrl: "https://medium.com/@asrihsoufiane/frontend-cheat-sheets-your-ultimate-developer-reference-hub-260e4ee43129",
     },
     {
       id: "p5",
-      category: { en: "SaaS", fr: "SaaS", ar: "SaaS" },
-      title: { en: "WorkHub Pro", fr: "WorkHub Pro", ar: "WorkHub Pro" },
-      description: { en: "Team collaboration SaaS platform used by 5,000+ companies worldwide.", fr: "Plateforme SaaS de collaboration d'équipe utilisée par 5 000+ entreprises.", ar: "منصة SaaS للتعاون بين الفريق يستخدمها 5000+ شركة." },
-      imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1400&q=80",
+      category: { en: "Learning Tools", fr: "Outils d'apprentissage", ar: "أدوات التعلم" },
+      title: { en: "Introducing AngularQuizMe — A Smarter Way to Master Angular Through Quizzes", fr: "Présentation d'AngularQuizMe — Un moyen plus intelligent de maîtriser Angular par des quiz", ar: "تقديم AngularQuizMe — طريقة أذكى لإتقان Angular من خلال الاختبارات" },
+      description: { en: "Learn Angular by doing with a comprehensive quiz platform designed for developers.", fr: "Apprenez Angular en pratiquant avec une plateforme de quiz complète conçue pour les développeurs.", ar: "تعلم Angular من خلال الممارسة مع منصة اختبار شاملة مصممة للمطورين." },
+      imageUrl: "/assets/medium-projects/angularquizme.png",
+      linkUrl: "https://medium.com/@asrihsoufiane/introducing-angularquizme-a-smarter-way-to-master-angular-through-quizzes-3a5f12ba5fd4",
     },
     {
-      id: "p6",
-      category: { en: "Web App", fr: "Application web", ar: "تطبيق ويب" },
-      title: { en: "DataViz Dashboard", fr: "Tableau de bord DataViz", ar: "لوحة معلومات DataViz" },
-      description: { en: "Real-time analytics dashboard processing 10M+ data points daily.", fr: "Tableau de bord analytique en temps réel traitant 10M+ points de données quotidiens.", ar: "لوحة معلومات تحليلية في الوقت الفعلي تعالج 10M+ نقطة بيانات يوميًا." },
-      imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+      id: "p7",
+      category: { en: "UI Components", fr: "Composants UI", ar: "مكونات واجهة المستخدم" },
+      title: { en: "Enhance Your Angular Projects with ng-payment-card-form Component", fr: "Améliorez vos projets Angular avec le composant ng-payment-card-form", ar: "عزز مشاريع Angular الخاصة بك بمكون ng-payment-card-form" },
+      description: { en: "A reusable Angular component with automatic formatting, validation, and dynamic backgrounds.", fr: "Un composant Angular réutilisable avec formatage automatique, validation et arrière-plans dynamiques.", ar: "مكون Angular قابل لإعادة الاستخدام مع التنسيق التلقائي والتحقق والخلفيات الديناميكية." },
+      imageUrl: "/assets/medium-projects/payment-card-form.png",
+      linkUrl: "https://medium.com/@asrihsoufiane/enhance-your-angular-projects-with-the-ng-payment-card-form-component-6ace092ad75a",
+    },
+    {
+      id: "p8",
+      category: { en: "Chatbot Integration", fr: "Intégration Chatbot", ar: "تكامل Chatbot" },
+      title: { en: "Simplify Angular Development with NgChatbotAngular: Your Chatbot Solution", fr: "Simplifiez le développement Angular avec NgChatbotAngular: Votre solution chatbot", ar: "بسّط تطوير Angular باستخدام NgChatbotAngular: حل الدردشة الخاص بك" },
+      description: { en: "An Angular component for creating chat interfaces with fully customizable UI and easy integration.", fr: "Un composant Angular pour créer des interfaces de chat avec une interface utilisateur entièrement personnalisable.", ar: "مكون Angular لإنشاء واجهات الدردشة مع واجهة مستخدم قابلة للتخصيص بالكامل." },
+      imageUrl: "/assets/medium-projects/ng-chatbot-angular.gif",
+      linkUrl: "https://medium.com/@asrihsoufiane/simplify-angular-development-with-ngchatbotangular-your-chatbot-solution-cbdf87899b01",
+    },
+    {
+      id: "p9",
+      category: { en: "Development Tools", fr: "Outils de développement", ar: "أدوات التطوير" },
+      title: { en: "Enhance Development Efficiency: Streamline Workflows with ng-capture-screenshots", fr: "Améliorez l'efficacité du développement: Rationalisez les flux de travail avec ng-capture-screenshots", ar: "عزز كفاءة التطوير: بسّط سير العمل باستخدام ng-capture-screenshots" },
+      description: { en: "Automate screenshot capture for different devices and screen sizes in your Angular applications.", fr: "Automatisez la capture d'écran pour différents appareils et tailles d'écran dans vos applications Angular.", ar: "أتمتة التقاط لقطات الشاشة لأجهزة وأحجام شاشات مختلفة في تطبيقات Angular الخاصة بك." },
+      imageUrl: "/assets/medium-projects/ng-capture-screenshots.png",
+      linkUrl: "https://medium.com/@asrihsoufiane/enhance-development-efficiency-streamline-web-workflows-with-ng-capture-screenshots-9d3fc21c32ae",
+    },
+    {
+      id: "p10",
+      category: { en: "TypeScript Tools", fr: "Outils TypeScript", ar: "أدوات TypeScript" },
+      title: { en: "Streamlining TypeScript Refactoring: Guide to ts-file-refactor", fr: "Rationaliser la refactorisation TypeScript: Guide de ts-file-refactor", ar: "تبسيط إعادة هيكلة TypeScript: دليل ts-file-refactor" },
+      description: { en: "Automate symbol renaming, file moves, and clean up import paths at scale across codebases.", fr: "Automatisez la modification de noms de symboles, le déplacement de fichiers et le nettoyage des imports à grande échelle.", ar: "أتمتة إعادة تسمية الرموز ونقل الملفات وتنظيف مسارات الاستيراد على نطاق واسع." },
+      imageUrl: "/assets/medium-projects/ts-file-refactor.png",
+      linkUrl: "https://medium.com/@asrihsoufiane/streamlining-typescript-refactoring-a-comprehensive-guide-to-ts-file-refactor-npm-package-017f53db521b",
     },
   ],
   testimonials: [
@@ -357,6 +348,63 @@ const ContentContext = createContext<ContentContextType | null>(null);
 
 const STORAGE_KEY = "sa7tec_content_v1";
 
+const HIDDEN_PORTFOLIO_TITLES = [
+  "Angular 21: The Game-Changing Release That's Reshaping Modern Web Development",
+  "Angular 21: The Game-Changing Release That’s Reshaping Modern Web Development",
+  "Unlocking the Power of Angular: A Step-by-Step Guide",
+];
+
+const MEDIUM_IMAGE_BY_SLUG = {
+  "i-built-a-free-platform-to-learn-angular-and-ace-your-next-interview-heres-why-you-need-it": "/assets/medium-projects/angular-courses-portal.png",
+  "deviceframe-pro-revolutionizing-web-development-testing-in-2026": "/assets/medium-projects/deviceframe-pro.png",
+  "frontend-cheat-sheets-your-ultimate-developer-reference-hub": "/assets/medium-projects/frontend-cheat-sheets.png",
+  "introducing-angularquizme-a-smarter-way-to-master-angular-through-quizzes": "/assets/medium-projects/angularquizme.png",
+  "enhance-your-angular-projects-with-the-ng-payment-card-form-component": "/assets/medium-projects/payment-card-form.png",
+  "simplify-angular-development-with-ngchatbotangular-your-chatbot-solution": "/assets/medium-projects/ng-chatbot-angular.gif",
+  "enhance-development-efficiency-streamline-web-workflows-with-ng-capture-screenshots": "/assets/medium-projects/ng-capture-screenshots.png",
+  "streamlining-typescript-refactoring-a-comprehensive-guide-to-ts-file-refactor-npm-package": "/assets/medium-projects/ts-file-refactor.png",
+} as const;
+
+function localizedSource(value: LocalizedString) {
+  return typeof value === "string" ? value : value.en;
+}
+
+function normalizedTitle(value: string) {
+  return value.trim().replace(/[’‘]/g, "'").toLowerCase();
+}
+
+function isHiddenPortfolioItem(item: SiteContent["portfolioItems"][number]) {
+  const title = normalizedTitle(localizedSource(item.title));
+  return HIDDEN_PORTFOLIO_TITLES.some((hiddenTitle) => normalizedTitle(hiddenTitle) === title);
+}
+
+function mediumImageForLink(linkUrl?: string) {
+  if (!linkUrl) return "";
+  const cleanUrl = linkUrl.split("?")[0];
+  const match = Object.entries(MEDIUM_IMAGE_BY_SLUG).find(([slug]) => cleanUrl.includes(slug));
+  return match?.[1] || "";
+}
+
+function normalizePortfolioImages(items: SiteContent["portfolioItems"]) {
+  return items.map((item) => {
+    const mediumImage = mediumImageForLink(item.linkUrl);
+    return mediumImage ? { ...item, imageUrl: mediumImage } : item;
+  });
+}
+
+function visiblePortfolioItems(items: SiteContent["portfolioItems"]) {
+  return normalizePortfolioImages(items.filter((item) => !isHiddenPortfolioItem(item)));
+}
+
+function restorePortfolioItems(parsed: Partial<SiteContent>) {
+  const defaults = visiblePortfolioItems(DEFAULT_CONTENT.portfolioItems);
+  if (!Array.isArray(parsed.portfolioItems)) return defaults;
+  const storedItems = visiblePortfolioItems(parsed.portfolioItems);
+  const hasPublishedLinks = storedItems.some((item) => typeof item.linkUrl === "string" && item.linkUrl.length > 0);
+  const hasLegacyGameItem = storedItems.some((item) => item.imageUrl?.includes("rubiks"));
+  return hasPublishedLinks && !hasLegacyGameItem ? storedItems : defaults;
+}
+
 export function ContentProvider({ children }: { children: ReactNode }) {
   const [content, setContentState] = useState<SiteContent>(() => {
     try {
@@ -367,6 +415,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
           ...DEFAULT_CONTENT,
           ...parsed,
           siteInfo: { ...DEFAULT_CONTENT.siteInfo, ...(parsed.siteInfo || {}) },
+          portfolioItems: restorePortfolioItems(parsed),
           contactInfo: {
             ...DEFAULT_CONTENT.contactInfo,
             ...(parsed.contactInfo || {}),
@@ -423,3 +472,4 @@ export function useContent() {
   if (!ctx) throw new Error("useContent must be used within ContentProvider");
   return ctx;
 }
+

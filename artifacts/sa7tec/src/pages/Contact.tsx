@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
 import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Seo } from "@/components/Seo";
 import { useContent } from "@/lib/content-store";
 import { useLanguage } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -11,16 +12,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, Linkedin, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { normalizeInput, RateLimiter, validateContactForm } from "@/lib/security";
 
 const CYAN = "#22d3ee";
 
 // EmailJS Configuration
-const EJ_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "JzJlbmIoQ5-ujtIgN";
-const EJ_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "service_6womk7q";
-const EJ_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "template_s2wirfx";
+const EJ_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY?.trim() ?? "";
+const EJ_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID?.trim() ?? "";
+const EJ_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID?.trim() ?? "";
 const contactRateLimiter = new RateLimiter(
   "sa7tec_contact_attempts",
   Number(import.meta.env.VITE_CONTACT_FORM_RATE_LIMIT || 5),
@@ -42,7 +43,7 @@ const inputStyle: React.CSSProperties = {
   color: "var(--s7-fg)",
   borderRadius: "10px",
   padding: "0.75rem 1rem",
-  fontSize: "0.9rem",
+  fontSize: "1rem",
   width: "100%",
   outline: "none",
   fontFamily: "'Outfit', sans-serif",
@@ -183,12 +184,25 @@ export default function Contact() {
   }
 
   return (
-    <PublicLayout>
-      <div style={{
-        minHeight: "100vh", background: "var(--s7-bg)",
-        padding: "120px 5vw 80px",
-        position: "relative", overflow: "hidden",
-      }}>
+    <>
+      <Seo
+        title="Contact SA7TEC | Digital Product Studio"
+        description="Tell SA7TEC about your app, game, AI, SaaS, or custom software idea and start the conversation."
+        path="/contact"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: "Contact SA7TEC",
+          url: "https://sa7tec.com/contact",
+          description: "Contact SA7TEC to discuss your product idea and start a digital product engagement.",
+        }}
+      />
+      <PublicLayout>
+        <div className="contact-page" style={{
+          minHeight: "100vh", background: "var(--s7-bg)",
+          padding: "120px 5vw 80px",
+          position: "relative", overflow: "hidden",
+        }}>
         {/* Ambient glows */}
         <div aria-hidden="true" style={{
           position: "absolute", top: "10%", right: "-10%",
@@ -219,9 +233,9 @@ export default function Contact() {
               TRANSMIT — CONTACT
             </p>
             <h1 style={{
-              fontSize: "clamp(2.5rem, 6vw, 5rem)",
+              fontSize: "clamp(2rem, 4.4vw, 3.4rem)",
               fontWeight: 900, color: "var(--s7-fg)",
-              letterSpacing: "-0.04em", lineHeight: 1.05,
+              letterSpacing: "-0.03em", lineHeight: 1.08,
               fontFamily: "'Outfit', sans-serif", margin: 0,
             }}>
               {t("contact.title_a")}{" "}
@@ -229,19 +243,17 @@ export default function Contact() {
             </h1>
             <p style={{
               color: "var(--s7-fg-dim)", fontSize: "1rem",
-              lineHeight: 1.7, marginTop: "1.5rem", maxWidth: "540px",
+              lineHeight: 1.78, marginTop: "1.5rem", maxWidth: "620px",
             }}>
               {t("contact.subtitle")}
             </p>
           </motion.div>
 
           {/* Grid */}
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "4rem", alignItems: "start" }}
-            className="contact-grid"
-          >
+          <div className="contact-grid">
             {/* Left: contact info */}
             <motion.div
+              className="contact-info-panel"
               initial={{ opacity: 0, x: -24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -254,9 +266,9 @@ export default function Contact() {
               ].map((item) => (
                 <div key={item.label} style={{ borderLeft: `1px solid ${item.color}33`, paddingLeft: "1.25rem" }}>
                   <p style={{
-                    color: "var(--s7-fg-muted)", fontSize: "0.65rem",
-                    letterSpacing: "0.2em", textTransform: "uppercase",
-                    fontFamily: "monospace", marginBottom: "0.5rem",
+                    color: "var(--s7-fg-muted)", fontSize: "0.85rem",
+                    letterSpacing: "0.18em", textTransform: "uppercase",
+                    fontFamily: "monospace", fontWeight: 600, marginBottom: "0.5rem",
                   }}>
                     {item.label}
                   </p>
@@ -290,26 +302,21 @@ export default function Contact() {
                 }}>
                   SIGNAL
                 </p>
-                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                <div className="contact-social-links">
                   {[
-                    { name: "LinkedIn", href: content.contactInfo.social.linkedin },
-                    { name: "Instagram", href: content.contactInfo.social.instagram },
-                  ].map((s) => (
+                    { icon: <Linkedin size={18} />, label: "LinkedIn", href: content.contactInfo.social.linkedin },
+                    { icon: <Instagram size={18} />, label: "Instagram", href: content.contactInfo.social.instagram },
+                  ].map((social) => (
                     <a
-                      key={s.name}
-                      href={s.href}
+                      key={social.label}
+                      href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       referrerPolicy="no-referrer"
-                      style={{
-                        color: "var(--s7-fg-dim)", fontSize: "0.75rem",
-                        textDecoration: "none", letterSpacing: "0.1em",
-                        fontFamily: "monospace", transition: "color 0.2s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = CYAN)}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--s7-fg-dim)")}
+                      aria-label={social.label}
+                      title={social.label}
                     >
-                      {s.name} ↗
+                      {social.icon}
                     </a>
                   ))}
                 </div>
@@ -318,6 +325,7 @@ export default function Contact() {
 
             {/* Right: form */}
             <motion.div
+              className="contact-form-panel"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -326,6 +334,8 @@ export default function Contact() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
+                  role="status"
+                  aria-live="polite"
                   style={{
                     display: "flex", flexDirection: "column",
                     alignItems: "center", justifyContent: "center",
@@ -380,7 +390,7 @@ export default function Contact() {
                           name="name"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.88rem", letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "monospace", fontWeight: 600 }}>
                                 {t("contact.full_name")}
                               </FormLabel>
                               <FormControl>
@@ -395,7 +405,7 @@ export default function Contact() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.88rem", letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "monospace", fontWeight: 600 }}>
                                 {t("contact.email")}
                               </FormLabel>
                               <FormControl>
@@ -413,7 +423,7 @@ export default function Contact() {
                           name="projectType"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.88rem", letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "monospace", fontWeight: 600 }}>
                                 {t("contact.project_type")}
                               </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -439,7 +449,7 @@ export default function Contact() {
                           name="budgetRange"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                              <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.88rem", letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "monospace", fontWeight: 600 }}>
                                 {t("contact.budget")}
                               </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -466,7 +476,7 @@ export default function Contact() {
                         name="message"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: "monospace" }}>
+                            <FormLabel style={{ color: "var(--s7-fg-dim)", fontSize: "0.88rem", letterSpacing: "0.14em", textTransform: "uppercase", fontFamily: "monospace", fontWeight: 600 }}>
                               {t("contact.message")}
                             </FormLabel>
                             <FormControl>
@@ -483,7 +493,7 @@ export default function Contact() {
                       />
 
                       {submitError && (
-                        <div style={{
+                        <div role="alert" style={{
                           display: "flex", gap: "0.75rem", alignItems: "center",
                           padding: "0.75rem 1rem", borderRadius: "8px",
                           background: "#dc26263d", border: "1px solid #dc2626",
@@ -528,6 +538,7 @@ export default function Contact() {
           </div>
         </div>
       </div>
-    </PublicLayout>
+      </PublicLayout>
+    </>
   );
 }

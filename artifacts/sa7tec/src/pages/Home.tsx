@@ -3,10 +3,8 @@ import { Link } from "wouter";
 import {
   ArrowUpRight,
   BrainCircuit,
-  CheckCircle2,
   Cloud,
   Gamepad2,
-  Github,
   Globe2,
   Instagram,
   Layers3,
@@ -25,25 +23,21 @@ import {
 } from "lucide-react";
 import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { PublicLayout } from "@/components/layout/PublicLayout";
+import { Seo } from "@/components/Seo";
 import { useContent } from "@/lib/content-store";
 import { useLanguage } from "@/lib/i18n";
+import type { LocalizedString } from "@/lib/i18n";
 import { assetSrc } from "@/lib/assets";
 
 const ACCENTS = ["#22d3ee", "#a78bfa", "#34d399", "#fbbf24", "#f472b6", "#fb923c", "#60a5fa", "#14b8a6"];
 
-const PORTFOLIO_IMAGE_FALLBACKS: Record<string, string> = {
-  p1: "/assets/rubiks-challenge.jpg",
-  p5: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1400&q=80",
-  p6: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
-};
+function sourceText(value: LocalizedString) {
+  return typeof value === "string" ? value : value.en;
+}
 
-const MISSING_PORTFOLIO_IMAGES = ["portfolio-game.png", "portfolio-saas.png", "portfolio-dashboard.png"];
-
-function portfolioImageFor(id: string, imageUrl: string) {
-  if (!imageUrl || MISSING_PORTFOLIO_IMAGES.some((name) => imageUrl.includes(name))) {
-    return PORTFOLIO_IMAGE_FALLBACKS[id] ?? imageUrl;
-  }
-  return imageUrl;
+function mediumImageFallback(imageUrl: string) {
+  const filename = imageUrl.split("/").pop();
+  return filename ? `https://miro.medium.com/v2/resize:fit:1024/${filename}` : "";
 }
 
 const iconMap = {
@@ -200,7 +194,7 @@ function Hero() {
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img src={assetSrc("/assets/sa7tec-logo.jpg")} alt="SA7TEC" />
+            <img src={assetSrc("/assets/sa7tec-logo.jpg")} alt="SA7TEC" loading="lazy" decoding="async" />
           </motion.div>
         </div>
 
@@ -223,10 +217,10 @@ function Hero() {
             {t("home.cta_project")}
             <ArrowUpRight size={18} />
           </Link>
-          <Link href="/games/rubiks-race" className="s7-button s7-button-ghost">
+          <a href="#projects" className="s7-button s7-button-ghost">
             <Play size={16} />
-            {t("home.cta_games")}
-          </Link>
+            View published work
+          </a>
         </motion.div>
 
         <motion.div
@@ -289,115 +283,12 @@ function StudioManifesto() {
   );
 }
 
-function DomainUniverse() {
-  const { t } = useLanguage();
-  const domains = [
-    {
-      title: t("home.product_games"),
-      body: t("home.product_games_desc"),
-      icon: Gamepad2,
-      color: "#22d3ee",
-      tags: ["Puzzle systems", "Retention loops", "Store launch"],
-    },
-    {
-      title: t("home.product_commerce"),
-      body: t("home.product_commerce_desc"),
-      icon: ShoppingCart,
-      color: "#a78bfa",
-      tags: ["Checkout", "Catalogs", "Growth"],
-    },
-    {
-      title: t("home.product_education"),
-      body: t("home.product_education_desc"),
-      icon: BrainCircuit,
-      color: "#34d399",
-      tags: ["Lessons", "Quizzes", "Progress"],
-    },
-    {
-      title: t("home.product_health"),
-      body: t("home.product_health_desc"),
-      icon: ShieldCheck,
-      color: "#fbbf24",
-      tags: ["Tracking", "Plans", "Motivation"],
-    },
-    {
-      title: "SaaS / AI",
-      body: "Intelligent platforms, dashboards, workflows, and automation engines.",
-      icon: Cloud,
-      color: "#f472b6",
-      tags: ["AI features", "Dashboards", "Automation"],
-    },
-    {
-      title: t("home.product_custom"),
-      body: t("home.product_custom_desc"),
-      icon: Layers3,
-      color: "#60a5fa",
-      tags: ["MVP", "Scale", "Ops tools"],
-    },
-  ];
-
-  return (
-    <section id="services" className="s7-section s7-domains">
-      <SectionIntro
-        eyebrow={t("home.products_id")}
-        title={
-          <>
-            {t("home.products_headline")} <span>{t("home.products_reach")}</span>
-          </>
-        }
-        body="SA7TEC builds ecosystems, not isolated screens. Each domain combines product strategy, interface craft, engineering, launch discipline, and post-launch iteration."
-      />
-
-      <div className="s7-domain-grid">
-        {domains.map((domain, index) => {
-          const Icon = domain.icon;
-          return (
-            <Reveal key={domain.title} delay={index * 0.05}>
-              <motion.article
-                className="s7-domain-card"
-                style={{ "--domain-color": domain.color } as React.CSSProperties}
-                whileHover={{ y: -10 }}
-                transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              >
-                <div className="s7-domain-light" />
-                <div className="s7-domain-top">
-                  <motion.div
-                    className="s7-domain-icon"
-                    whileHover={{ rotate: [0, -8, 8, 0], scale: 1.08 }}
-                    transition={{ duration: 0.55 }}
-                  >
-                    <Icon size={30} />
-                  </motion.div>
-                  <span>0{index + 1}</span>
-                </div>
-                <div className="s7-domain-content">
-                  <h3>{domain.title}</h3>
-                  <p>{domain.body}</p>
-                </div>
-                <div className="s7-domain-tags">
-                  {domain.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-                <div className="s7-domain-reveal">
-                  <span>Explore ecosystem</span>
-                  <ArrowUpRight size={17} />
-                </div>
-              </motion.article>
-            </Reveal>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
 function ServicesDeepDive() {
   const { t, tr } = useLanguage();
   const { content } = useContent();
 
   return (
-    <section className="s7-section s7-services">
+    <section id="services" className="s7-section s7-services">
       <SectionIntro
         eyebrow={t("section.what_we_build")}
         title={
@@ -408,20 +299,25 @@ function ServicesDeepDive() {
         body={t("section.what_we_build_sub")}
       />
 
-      <div className="s7-service-list">
+      <div className="s7-service-grid">
         {content.services.map((service, index) => {
           const Icon = iconMap[service.iconName as keyof typeof iconMap] ?? Sparkles;
           const color = service.color.startsWith("#") ? service.color : ACCENTS[index % ACCENTS.length];
           return (
             <Reveal key={service.id} delay={Math.min(index * 0.04, 0.24)}>
-              <motion.article className="s7-service-row" whileHover={{ x: 8 }}>
-                <div className="s7-service-index">0{index + 1}</div>
-                <div className="s7-service-icon" style={{ color }}>
-                  <Icon size={24} />
+              <motion.article
+                className="s7-service-card"
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.24, ease: "easeOut" }}
+              >
+                <div className="s7-service-card-top">
+                  <div className="s7-service-icon" style={{ color, background: `${color}16` }}>
+                    <Icon size={22} />
+                  </div>
+                  <span className="s7-service-index">0{index + 1}</span>
                 </div>
                 <h3>{tr(service.title)}</h3>
                 <p>{tr(service.description)}</p>
-                <ArrowUpRight size={21} />
               </motion.article>
             </Reveal>
           );
@@ -431,97 +327,63 @@ function ServicesDeepDive() {
   );
 }
 
-function FlagshipGame() {
-  const { t, tr } = useLanguage();
-  const { content } = useContent();
-  const game = content.games[0];
-  const shots = game?.screenshots?.length ? game.screenshots : [game?.imageUrl].filter(Boolean) as string[];
-
-  if (!game) return null;
-
-  return (
-    <section id="games" className="s7-section s7-game">
-      <div className="s7-game-shell">
-        <Reveal>
-          <div className="s7-game-copy">
-            <p className="s7-eyebrow">{t("home.game_id")}</p>
-            <span className="s7-status">{tr(game.statusBadge) || t("home.game_badge")}</span>
-            <h2>{tr(game.title)}</h2>
-            <h3>{tr(game.subtitle)}</h3>
-            <p>{tr(game.description) || t("home.game_desc")}</p>
-            <div className="s7-game-features">
-              {[t("section.feat.levels"), t("section.feat.leaderboards"), t("section.feat.daily")].map((feature) => (
-                <span key={feature}>
-                  <CheckCircle2 size={16} />
-                  {feature}
-                </span>
-              ))}
-            </div>
-            <Link href="/games/rubiks-race" className="s7-button s7-button-primary">
-              {t("cta.explore_game")}
-              <ArrowUpRight size={18} />
-            </Link>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.12}>
-          <div className="s7-phone-stage">
-            {shots.slice(0, 3).map((shot, index) => (
-              <motion.div
-                key={shot}
-                className={`s7-phone s7-phone-${index}`}
-                animate={{ y: [0, index % 2 ? 12 : -12, 0] }}
-                transition={{ duration: 5 + index, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <img src={assetSrc(shot)} alt={`${tr(game.title)} screenshot ${index + 1}`} />
-              </motion.div>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function WorkShowcase() {
-  const { t, tr } = useLanguage();
+  const { t } = useLanguage();
   const { content } = useContent();
+  const mediumProjects = content.portfolioItems.filter((item) => item.linkUrl && item.imageUrl);
+
+  if (!mediumProjects.length) return null;
 
   return (
-    <section className="s7-section s7-work">
+    <section id="projects" className="s7-section s7-work">
       <SectionIntro
         eyebrow={t("section.portfolio")}
         title={
           <>
-            Digital products with <span>market shape.</span>
+            Published <span>Medium projects.</span>
           </>
         }
-        body={t("section.portfolio_sub")}
+        body="Real articles and product writeups from the SA7TEC Medium portfolio, using their published images and source links."
       />
       <div className="s7-work-grid">
-        {content.portfolioItems.map((item, index) => (
-          <Reveal key={item.id} delay={index * 0.05}>
-            <motion.article className="s7-work-card" whileHover={{ y: -8 }}>
-              <div className="s7-work-media">
-                <img
-                  src={assetSrc(portfolioImageFor(item.id, item.imageUrl))}
-                  alt={tr(item.title)}
-                  onError={(event) => {
-                    const fallback = PORTFOLIO_IMAGE_FALLBACKS[item.id];
-                    if (fallback && event.currentTarget.src !== assetSrc(fallback)) {
-                      event.currentTarget.src = assetSrc(fallback);
-                    }
-                  }}
-                />
-              </div>
-              <div className="s7-work-body">
-                <span>{tr(item.category)}</span>
-                <h3>{tr(item.title)}</h3>
-                <p>{tr(item.description)}</p>
-              </div>
-            </motion.article>
-          </Reveal>
-        ))}
+        {mediumProjects.map((item, index) => {
+          return (
+            <Reveal key={item.id} delay={index * 0.05}>
+              <motion.article className="s7-work-card" whileHover={{ y: -8, scale: 1.01 }}>
+                <div className="s7-work-media">
+                  <img
+                    src={assetSrc(item.imageUrl)}
+                    alt={sourceText(item.title)}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    onError={(event) => {
+                      const fallback = mediumImageFallback(item.imageUrl);
+                      if (fallback && event.currentTarget.src !== fallback) {
+                        event.currentTarget.src = fallback;
+                      }
+                    }}
+                  />
+                  <div className="s7-work-overlay">
+                    <span className="s7-work-pill">{sourceText(item.category)}</span>
+                  </div>
+                </div>
+                <div className="s7-work-body">
+                  <div className="s7-work-meta">
+                    <span>{sourceText(item.category)}</span>
+                    <span className="s7-work-badge">Medium</span>
+                  </div>
+                  <h3>{sourceText(item.title)}</h3>
+                  <p>{sourceText(item.description)}</p>
+                  <a className="s7-work-link" href={item.linkUrl} target="_blank" rel="noreferrer">
+                    <span>Read Project</span>
+                    <ArrowUpRight size={18} />
+                  </a>
+                </div>
+              </motion.article>
+            </Reveal>
+          );
+        })}
       </div>
     </section>
   );
@@ -657,13 +519,13 @@ function ContactFooter() {
       </div>
       <div className="s7-footer-bottom">
         <div>
-          <img src={assetSrc("/assets/sa7tec-logo.jpg")} alt="SA7TEC" />
+          <img src={assetSrc("/assets/sa7tec-logo.jpg")} alt="SA7TEC" loading="lazy" decoding="async" />
           <strong>SA7TEC</strong>
         </div>
         <nav>
           <a href="#studio">{t("nav.studio")}</a>
           <a href="#services">{t("nav.services")}</a>
-          <a href="#games">{t("nav.games")}</a>
+          <a href="#projects">{t("nav.projects")}</a>
           <a href="#capabilities">{t("nav.capabilities")}</a>
         </nav>
         <address>
@@ -697,19 +559,37 @@ function ContactFooter() {
 
 export default function Home() {
   return (
-    <PublicLayout>
-      <main>
-        <Hero />
-        <StudioManifesto />
-        <DomainUniverse />
-        <ServicesDeepDive />
-        <FlagshipGame />
-        <WorkShowcase />
-        <Capabilities />
-        <NumbersAndAbout />
-        <Testimonials />
-        <ContactFooter />
-      </main>
-    </PublicLayout>
+    <>
+      <Seo
+        title="SA7TEC | Digital Product Studio for Mobile Apps, Games, AI & SaaS"
+        description="SA7TEC builds premium mobile apps, games, AI products, SaaS platforms, e-commerce experiences, dashboards, and custom software for ambitious teams."
+        path="/"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "SA7TEC",
+          url: "https://sa7tec.com/",
+          description: "A premium digital product studio specializing in mobile apps, games, AI, SaaS, and custom software.",
+          publisher: {
+            "@type": "Organization",
+            name: "SA7TEC",
+            url: "https://sa7tec.com/",
+            logo: "https://sa7tec.com/assets/sa7tec-logo.jpg",
+          },
+        }}
+      />
+      <PublicLayout>
+        <div>
+          <Hero />
+          <StudioManifesto />
+          <ServicesDeepDive />
+          <WorkShowcase />
+          <Capabilities />
+          <NumbersAndAbout />
+          <Testimonials />
+          <ContactFooter />
+        </div>
+      </PublicLayout>
+    </>
   );
 }

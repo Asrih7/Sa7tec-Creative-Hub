@@ -12,7 +12,6 @@ import { Save, Trash2, Download } from "lucide-react";
 import { LocalizedField } from "@/components/admin/LocalizedField";
 import { ServicesEditor } from "@/components/admin/ServicesEditor";
 import { PortfolioEditor } from "@/components/admin/PortfolioEditor";
-import { GameEditor } from "@/components/admin/GameEditor";
 import { StatsEditor } from "@/components/admin/StatsEditor";
 import { ProcessEditor } from "@/components/admin/ProcessEditor";
 import { TestimonialsEditor } from "@/components/admin/TestimonialsEditor";
@@ -80,7 +79,6 @@ export default function Dashboard() {
             <TabsTrigger value="general">{t("admin.tab.general")}</TabsTrigger>
             <TabsTrigger value="services">{t("admin.tab.services")}</TabsTrigger>
             <TabsTrigger value="portfolio">{t("admin.tab.portfolio")}</TabsTrigger>
-            <TabsTrigger value="game">{t("admin.tab.game")}</TabsTrigger>
             <TabsTrigger value="stats">{t("admin.tab.stats")}</TabsTrigger>
             <TabsTrigger value="process">{t("admin.tab.process")}</TabsTrigger>
             <TabsTrigger value="testimonials">{t("admin.tab.testimonials")}</TabsTrigger>
@@ -147,10 +145,6 @@ export default function Dashboard() {
 
           <TabsContent value="portfolio" className="space-y-6">
             <PortfolioEditor />
-          </TabsContent>
-
-          <TabsContent value="game" className="space-y-6">
-            <GameEditor />
           </TabsContent>
 
           <TabsContent value="stats" className="space-y-6">
