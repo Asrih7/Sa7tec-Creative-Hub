@@ -28,6 +28,8 @@ import { useContent } from "@/lib/content-store";
 import { useLanguage } from "@/lib/i18n";
 import type { LocalizedString } from "@/lib/i18n";
 import { assetSrc } from "@/lib/assets";
+import { TiltCard } from "@/components/ui/tilt-card";
+import { SectionWrapper } from "@/components/ui/section-wrapper";
 
 const ACCENTS = ["#22d3ee", "#a78bfa", "#34d399", "#fbbf24", "#f472b6", "#fb923c", "#60a5fa", "#14b8a6"];
 
@@ -258,28 +260,30 @@ function StudioManifesto() {
   ];
 
   return (
-    <section id="studio" className="s7-section s7-manifesto">
-      <SectionIntro
-        eyebrow={t("home.manifesto_id")}
-        title={
-          <>
-            {t("home.manifesto_1")} <span>{t("home.manifesto_2")}</span>
-          </>
-        }
-        body={tr(content.siteInfo.aboutText)}
-      />
-      <div className="s7-manifesto-grid">
-        {pillars.map((pillar, index) => (
-          <Reveal key={pillar.title} delay={index * 0.08}>
-            <article>
-              <span>0{index + 1}</span>
-              <h3>{pillar.title}</h3>
-              <p>{pillar.body}</p>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </section>
+    <SectionWrapper>
+      <section id="studio" className="s7-section s7-manifesto">
+        <SectionIntro
+          eyebrow={t("home.manifesto_id")}
+          title={
+            <>
+              {t("home.manifesto_1")} <span>{t("home.manifesto_2")}</span>
+            </>
+          }
+          body={tr(content.siteInfo.aboutText)}
+        />
+        <div className="s7-manifesto-grid">
+          {pillars.map((pillar, index) => (
+            <Reveal key={pillar.title} delay={index * 0.08}>
+              <article>
+                <span>0{index + 1}</span>
+                <h3>{pillar.title}</h3>
+                <p>{pillar.body}</p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+    </SectionWrapper>
   );
 }
 
@@ -288,42 +292,46 @@ function ServicesDeepDive() {
   const { content } = useContent();
 
   return (
-    <section id="services" className="s7-section s7-services">
-      <SectionIntro
-        eyebrow={t("section.what_we_build")}
-        title={
-          <>
-            Product teams for <span>ambitious builds.</span>
-          </>
-        }
-        body={t("section.what_we_build_sub")}
-      />
+    <SectionWrapper>
+      <section id="services" className="s7-section s7-services">
+        <SectionIntro
+          eyebrow={t("section.what_we_build")}
+          title={
+            <>
+              Product teams for <span>ambitious builds.</span>
+            </>
+          }
+          body={t("section.what_we_build_sub")}
+        />
 
-      <div className="s7-service-grid">
-        {content.services.map((service, index) => {
-          const Icon = iconMap[service.iconName as keyof typeof iconMap] ?? Sparkles;
-          const color = service.color.startsWith("#") ? service.color : ACCENTS[index % ACCENTS.length];
-          return (
-            <Reveal key={service.id} delay={Math.min(index * 0.04, 0.24)}>
-              <motion.article
-                className="s7-service-card"
-                whileHover={{ y: -6 }}
-                transition={{ duration: 0.24, ease: "easeOut" }}
-              >
-                <div className="s7-service-card-top">
-                  <div className="s7-service-icon" style={{ color, background: `${color}16` }}>
-                    <Icon size={22} />
-                  </div>
-                  <span className="s7-service-index">0{index + 1}</span>
-                </div>
-                <h3>{tr(service.title)}</h3>
-                <p>{tr(service.description)}</p>
-              </motion.article>
-            </Reveal>
-          );
-        })}
-      </div>
-    </section>
+        <div className="s7-service-grid">
+          {content.services.map((service, index) => {
+            const Icon = iconMap[service.iconName as keyof typeof iconMap] ?? Sparkles;
+            const color = service.color.startsWith("#") ? service.color : ACCENTS[index % ACCENTS.length];
+            return (
+              <Reveal key={service.id} delay={Math.min(index * 0.04, 0.24)}>
+                <TiltCard className="h-full">
+                  <motion.article
+                    className="s7-service-card h-full"
+                    whileHover={{ y: -6 }}
+                    transition={{ duration: 0.24, ease: "easeOut" }}
+                  >
+                    <div className="s7-service-card-top">
+                      <div className="s7-service-icon" style={{ color, background: `${color}16` }}>
+                        <Icon size={22} />
+                      </div>
+                      <span className="s7-service-index">0{index + 1}</span>
+                    </div>
+                    <h3>{tr(service.title)}</h3>
+                    <p>{tr(service.description)}</p>
+                  </motion.article>
+                </TiltCard>
+              </Reveal>
+            );
+          })}
+        </div>
+      </section>
+    </SectionWrapper>
   );
 }
 
