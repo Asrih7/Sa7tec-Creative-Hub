@@ -29,12 +29,11 @@ export function sanitizeInput(input: string): string {
   return (
     input
       .trim()
-      .replace(/[<>\"']/g, (char) => {
+      .replace(/[<>\"]/g, (char) => {
         const map: Record<string, string> = {
           "<": "&lt;",
           ">": "&gt;",
           '"': "&quot;",
-          "'": "&#x27;",
         };
         return map[char] || char;
       })

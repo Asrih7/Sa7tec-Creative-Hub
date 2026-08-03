@@ -74,7 +74,7 @@ export interface SiteContent {
 
 const DEFAULT_CONTENT: SiteContent = {
   siteInfo: {
-    title: "SA7TEC",
+    title: "SA7TEC / PRODUCT STUDIO",
     tagline: { en: "Digital Products That Matter", fr: "Des produits numériques qui comptent", ar: "منتجات رقمية تترك أثرًا" },
     heroHeadline: {
       en: "We Build Digital Products That Transform Businesses",
@@ -237,7 +237,7 @@ const DEFAULT_CONTENT: SiteContent = {
       category: { en: "Development Tools", fr: "Outils de développement", ar: "أدوات التطوير" },
       title: { en: "Enhance Development Efficiency: Streamline Workflows with ng-capture-screenshots", fr: "Améliorez l'efficacité du développement: Rationalisez les flux de travail avec ng-capture-screenshots", ar: "عزز كفاءة التطوير: بسّط سير العمل باستخدام ng-capture-screenshots" },
       description: { en: "Automate screenshot capture for different devices and screen sizes in your Angular applications.", fr: "Automatisez la capture d'écran pour différents appareils et tailles d'écran dans vos applications Angular.", ar: "أتمتة التقاط لقطات الشاشة لأجهزة وأحجام شاشات مختلفة في تطبيقات Angular الخاصة بك." },
-      imageUrl: "/assets/medium-projects/ng-capture-screenshots.png",
+      imageUrl: "/assets/sa7tec-logo.jpg",
       linkUrl: "https://medium.com/@asrihsoufiane/enhance-development-efficiency-streamline-web-workflows-with-ng-capture-screenshots-9d3fc21c32ae",
     },
     {
@@ -245,7 +245,7 @@ const DEFAULT_CONTENT: SiteContent = {
       category: { en: "TypeScript Tools", fr: "Outils TypeScript", ar: "أدوات TypeScript" },
       title: { en: "Streamlining TypeScript Refactoring: Guide to ts-file-refactor", fr: "Rationaliser la refactorisation TypeScript: Guide de ts-file-refactor", ar: "تبسيط إعادة هيكلة TypeScript: دليل ts-file-refactor" },
       description: { en: "Automate symbol renaming, file moves, and clean up import paths at scale across codebases.", fr: "Automatisez la modification de noms de symboles, le déplacement de fichiers et le nettoyage des imports à grande échelle.", ar: "أتمتة إعادة تسمية الرموز ونقل الملفات وتنظيف مسارات الاستيراد على نطاق واسع." },
-      imageUrl: "/assets/medium-projects/ts-file-refactor.png",
+      imageUrl: "/assets/sa7tec-logo.jpg",
       linkUrl: "https://medium.com/@asrihsoufiane/streamlining-typescript-refactoring-a-comprehensive-guide-to-ts-file-refactor-npm-package-017f53db521b",
     },
   ],
@@ -384,11 +384,11 @@ function mediumImageForLink(linkUrl?: string) {
   const match = Object.entries(MEDIUM_IMAGE_BY_SLUG).find(([slug]) => cleanUrl.includes(slug));
   return match?.[1] || "";
 }
-
 function normalizePortfolioImages(items: SiteContent["portfolioItems"]) {
   return items.map((item) => {
     const mediumImage = mediumImageForLink(item.linkUrl);
-    return mediumImage ? { ...item, imageUrl: mediumImage } : item;
+    const preserveCustomLogo = item.imageUrl?.endsWith("/sa7tec-logo.jpg");
+    return mediumImage && !preserveCustomLogo ? { ...item, imageUrl: mediumImage } : item;
   });
 }
 
@@ -411,15 +411,22 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
+        const normalizedParsed = {
+          ...parsed,
+          siteInfo: {
+            ...parsed.siteInfo,
+            title: parsed.siteInfo?.title === "SA7TEC" ? DEFAULT_CONTENT.siteInfo.title : parsed.siteInfo?.title,
+          },
+        };
         return {
           ...DEFAULT_CONTENT,
-          ...parsed,
-          siteInfo: { ...DEFAULT_CONTENT.siteInfo, ...(parsed.siteInfo || {}) },
-          portfolioItems: restorePortfolioItems(parsed),
+          ...normalizedParsed,
+          siteInfo: { ...DEFAULT_CONTENT.siteInfo, ...(normalizedParsed.siteInfo || {}) },
+          portfolioItems: restorePortfolioItems(normalizedParsed),
           contactInfo: {
             ...DEFAULT_CONTENT.contactInfo,
-            ...(parsed.contactInfo || {}),
-            social: { ...DEFAULT_CONTENT.contactInfo.social, ...((parsed.contactInfo && parsed.contactInfo.social) || {}) },
+            ...(normalizedParsed.contactInfo || {}),
+            social: { ...DEFAULT_CONTENT.contactInfo.social, ...((normalizedParsed.contactInfo && normalizedParsed.contactInfo.social) || {}) },
           },
         };
       }

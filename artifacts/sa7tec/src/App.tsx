@@ -1,4 +1,5 @@
 import { Suspense, lazy } from "react";
+import { HelmetProvider } from "react-helmet-async";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -49,12 +50,13 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
       <ThemeProvider>
         <LanguageProvider>
           <ContentProvider>
             <AuthProvider>
               <TooltipProvider>
-                <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}> 
                   <Router />
                 </WouterRouter>
                 <Toaster />
@@ -63,6 +65,7 @@ function App() {
           </ContentProvider>
         </LanguageProvider>
       </ThemeProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

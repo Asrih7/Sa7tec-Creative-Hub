@@ -18,11 +18,19 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const key = 'sa7tec_admin_attempts';
+    const stored = localStorage.getItem(key);
+    const attempts = stored ? Number(stored) || 0 : 0;
+    if (attempts >= 10) {
+      toast({ title: t('admin.too_many_attempts'), description: t('admin.too_many_attempts_desc'), variant: 'destructive' });
+      return;
+    }
     if (await login(password)) {
       toast({
         title: t("admin.toast_granted"),
         description: t("admin.toast_granted_desc"),
       });
+      localStorage.removeItem(key);
       setLocation("/admin/dashboard");
     } else {
       toast({
@@ -30,7 +38,14 @@ export default function AdminLogin() {
         description: t("admin.toast_denied_desc"),
         variant: "destructive",
       });
+      const next = attempts + 1;
+      localStorage.setItem(key, String(next));
       setPassword("");
+      // exponential backoff for repeated failures (client-side only)
+      const delayMs = Math.min(30000, Math.pow(2, Math.max(0, next - 3)) * 1000);
+      if (delayMs > 0) {
+        await new Promise((r) => setTimeout(r, delayMs));
+      }
     }
   };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import analytics from "@/lib/analytics";
 import { MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContent } from "@/lib/content-store";
@@ -69,7 +70,10 @@ export function WhatsAppButton() {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                analytics.trackEvent('whatsapp_click', { label: 'whatsapp_start_chat' });
+              }}
               className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] hover:bg-[#1ebe5a] text-white text-sm font-semibold py-2.5 transition-colors shadow-[0_0_18px_-3px_#25D366]"
               data-testid="link-whatsapp-chat"
             >

@@ -4,6 +4,8 @@ import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import CookieConsent, { hasConsented } from "@/components/CookieConsent";
+import analytics from "@/lib/analytics";
 import { useLanguage } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { assetSrc } from "@/lib/assets";
@@ -42,6 +44,19 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   ];
 
   const themeLabel = isDark ? t("theme.toggle_light") : t("theme.toggle_dark");
+
+  useEffect(() => {
+    if (hasConsented()) {
+      analytics.loadAnalytics();
+      analytics.trackPage(location || window.location.pathname);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hasConsented()) {
+      analytics.trackPage(location || window.location.pathname);
+    }
+  }, [location]);
 
   return (
     <div className="site-shell" style={{ minHeight: "100vh", background: "var(--s7-bg)", color: "var(--s7-fg)", overflowX: "clip" }}>
@@ -266,6 +281,12 @@ export function PublicLayout({ children }: { children: ReactNode }) {
       <main id="main-content" tabIndex={-1}>
         {children}
       </main>
+      <CookieConsent
+        onAccept={() => {
+          analytics.loadAnalytics();
+          analytics.trackPage(window.location.pathname);
+        }}
+      />
       <WhatsAppButton />
     </div>
   );

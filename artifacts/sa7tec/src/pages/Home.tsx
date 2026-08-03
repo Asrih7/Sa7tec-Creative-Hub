@@ -188,7 +188,7 @@ function Hero() {
             transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
             {content.siteInfo.title}
-            <span>{t("home.manifesto_2")}</span>
+            <span>PRODUCT STUDIO</span>
           </motion.h1>
           <motion.div
             className="s7-hero-mark"
@@ -275,7 +275,6 @@ function StudioManifesto() {
           {pillars.map((pillar, index) => (
             <Reveal key={pillar.title} delay={index * 0.08}>
               <article>
-                <span>0{index + 1}</span>
                 <h3>{pillar.title}</h3>
                 <p>{pillar.body}</p>
               </article>
@@ -320,7 +319,6 @@ function ServicesDeepDive() {
                       <div className="s7-service-icon" style={{ color, background: `${color}16` }}>
                         <Icon size={22} />
                       </div>
-                      <span className="s7-service-index">0{index + 1}</span>
                     </div>
                     <h3>{tr(service.title)}</h3>
                     <p>{tr(service.description)}</p>
