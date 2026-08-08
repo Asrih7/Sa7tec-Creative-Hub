@@ -24,7 +24,7 @@ export function StatsEditor() {
   const add = () =>
     setItems((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), label: { en: "New stat", fr: "Nouvelle stat", ar: "إحصائية جديدة" }, value: "0" },
+      { id: crypto.randomUUID(), label: { en: "New stat", fr: "Nouvelle stat", ar: "إحصائية جديدة" }, value: "50+" },
     ]);
 
   const save = () => {

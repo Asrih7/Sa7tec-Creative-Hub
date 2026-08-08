@@ -23,7 +23,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const html = document.documentElement;
     html.setAttribute("data-theme", theme);
-    document.body.style.background = theme === "light" ? "var(--s7-bg)" : "#000";
     if (theme === "dark") {
       html.classList.add("dark");
     } else {

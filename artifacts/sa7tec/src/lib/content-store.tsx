@@ -124,7 +124,7 @@ const DEFAULT_CONTENT: SiteContent = {
         fr: "Applications web modernes et applications web progressives (PWA) évolutives.",
         ar: "تطبيقات ويب حديثة وتطبيقات ويب تقدمية قابلة للتوسع.",
       },
-      iconName: "Globe",
+      iconName: "Code2",
       color: "#34d399",
     },
     {
@@ -135,7 +135,7 @@ const DEFAULT_CONTENT: SiteContent = {
         fr: "Produits SaaS évolutifs et plateformes numériques conçus pour les entreprises.",
         ar: "منتجات SaaS قابلة للتوسع ومنصات رقمية مبنية للعمل.",
       },
-      iconName: "Cloud",
+      iconName: "Layers3",
       color: "#fbbf24",
     },
     {

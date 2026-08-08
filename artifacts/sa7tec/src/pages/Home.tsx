@@ -4,6 +4,7 @@ import {
   ArrowUpRight,
   BrainCircuit,
   Cloud,
+  Code2,
   Gamepad2,
   Globe2,
   Instagram,
@@ -45,6 +46,7 @@ function mediumImageFallback(imageUrl: string) {
 const iconMap = {
   Gamepad2,
   Smartphone,
+  Code2,
   Globe: Globe2,
   Cloud,
   ShoppingCart,
@@ -76,6 +78,7 @@ function useCountUp(value: string, active: boolean) {
   }, [active, numeric]);
 
   if (Number.isNaN(numeric)) return value;
+  if (!active) return value;
   const formatted = numeric % 1 === 0 ? Math.round(count).toLocaleString() : count.toFixed(1);
   return `${formatted}${suffix}`;
 }
@@ -164,82 +167,118 @@ function Hero() {
   const { t, tr } = useLanguage();
   const { content } = useContent();
   const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 0.25], [0, -90]);
+  const y = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
   const opacity = useTransform(scrollYProgress, [0, 0.22], [1, 0.35]);
-  const services = content.services.slice(0, 5);
+  const services = content.services.slice(0, 4);
 
   return (
     <section id="home" className="s7-hero">
       <MagneticAura />
       <motion.div className="s7-hero-inner" style={{ y, opacity }}>
-        <motion.p
-          className="s7-kicker"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          {t("home.year")} / {t("home.tagline")}
-        </motion.p>
+        <div className="s7-hero-copygroup">
+          <motion.p
+            className="s7-kicker"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {t("home.year")} / {t("home.tagline")}
+          </motion.p>
 
-        <div className="s7-hero-title-wrap">
-          <motion.h1
+          <motion.div
+            className="s7-hero-copy"
             initial={{ opacity: 0, y: 54 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
-            {content.siteInfo.title}
-            <span>PRODUCT STUDIO</span>
-          </motion.h1>
+            <p className="s7-hero-label">{content.siteInfo.title}</p>
+            <h1>{tr(content.siteInfo.heroHeadline)}</h1>
+            <p>{tr(content.siteInfo.heroSubheadline)}</p>
+          </motion.div>
+
           <motion.div
-            className="s7-hero-mark"
-            initial={{ opacity: 0, scale: 0.88, rotate: -4 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="s7-hero-actions"
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.35 }}
           >
-            <img src={assetSrc("/assets/sa7tec-logo.jpg")} alt="SA7TEC" loading="lazy" decoding="async" />
+            <Link href="/contact" className="s7-button s7-button-primary">
+              {t("home.cta_project")}
+              <ArrowUpRight size={18} />
+            </Link>
+            <a href="#projects" className="s7-button s7-button-ghost">
+              <Play size={16} />
+              View published work
+            </a>
+          </motion.div>
+          <motion.p
+            className="s7-hero-copy-note"
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.56 }}
+          >
+            We help product founders, startups, and agencies ship modern mobile, web, and AI-driven experiences.
+          </motion.p>
+
+          <motion.div
+            className="s7-hero-strip"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.48 }}
+          >
+            {services.map((service, index) => {
+              const Icon = iconMap[service.iconName as keyof typeof iconMap] ?? Layers3;
+              return (
+                <div key={service.id}>
+                  <Icon size={17} color={ACCENTS[index % ACCENTS.length]} />
+                  <span>{tr(service.title)}</span>
+                </div>
+              );
+            })}
           </motion.div>
         </div>
 
-        <motion.p
-          className="s7-hero-copy"
-          initial={{ opacity: 0, y: 26 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.35 }}
-        >
-          {tr(content.siteInfo.heroSubheadline)}
-        </motion.p>
-
         <motion.div
-          className="s7-hero-actions"
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.48 }}
+          className="s7-hero-visual"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Link href="/contact" className="s7-button s7-button-primary">
-            {t("home.cta_project")}
-            <ArrowUpRight size={18} />
-          </Link>
-          <a href="#projects" className="s7-button s7-button-ghost">
-            <Play size={16} />
-            View published work
-          </a>
-        </motion.div>
-
-        <motion.div
-          className="s7-hero-strip"
-          initial={{ opacity: 0, y: 28 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.62 }}
-        >
-          {services.map((service, index) => {
-            const Icon = iconMap[service.iconName as keyof typeof iconMap] ?? Layers3;
-            return (
-              <div key={service.id}>
-                <Icon size={17} color={ACCENTS[index % ACCENTS.length]} />
-                <span>{tr(service.title)}</span>
+          <div className="s7-visual-card">
+            <div className="s7-visual-brand">
+              <img src={assetSrc("/assets/sa7tec-logo.jpg")} alt="SA7TEC" loading="lazy" decoding="async" />
+              <div>
+                <strong>SA7TEC</strong>
+                <span>Product studio</span>
               </div>
-            );
-          })}
+            </div>
+            <div className="s7-visual-mockup">
+              <div className="s7-visual-device">
+                <div className="s7-device-top">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <div className="s7-device-screen">
+                  <img
+                    src={assetSrc("/assets/medium-projects/deviceframe-pro.png")}
+                    alt="Product preview"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="s7-device-status">
+                    <span>Live preview</span>
+                    <strong>92% task completion</strong>
+                  </div>
+                </div>
+              </div>
+              <div className="s7-visual-band">
+                <span>Mobile-first UX</span>
+                <span>Scalable SaaS</span>
+                <span>AI-powered flows</span>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </motion.div>
       <div className="s7-scroll-cue" aria-hidden="true">
@@ -254,9 +293,9 @@ function StudioManifesto() {
   const { t, tr } = useLanguage();
   const { content } = useContent();
   const pillars = [
-    { title: t("home.prop1_title"), body: t("home.prop1_desc") },
-    { title: t("home.prop2_title"), body: t("home.prop2_desc") },
-    { title: t("home.prop3_title"), body: t("home.prop3_desc") },
+    { icon: Smartphone, title: t("home.prop1_title"), body: t("home.prop1_desc") },
+    { icon: Layers3, title: t("home.prop2_title"), body: t("home.prop2_desc") },
+    { icon: Globe2, title: t("home.prop3_title"), body: t("home.prop3_desc") },
   ];
 
   return (
@@ -272,14 +311,20 @@ function StudioManifesto() {
           body={tr(content.siteInfo.aboutText)}
         />
         <div className="s7-manifesto-grid">
-          {pillars.map((pillar, index) => (
-            <Reveal key={pillar.title} delay={index * 0.08}>
-              <article>
-                <h3>{pillar.title}</h3>
-                <p>{pillar.body}</p>
-              </article>
-            </Reveal>
-          ))}
+          {pillars.map((pillar, index) => {
+            const Icon = pillar.icon;
+            return (
+              <Reveal key={pillar.title} delay={index * 0.08}>
+                <article>
+                  <div className="s7-manifesto-icon">
+                    <Icon size={32} />
+                  </div>
+                  <h3>{pillar.title}</h3>
+                  <p>{pillar.body}</p>
+                </article>
+              </Reveal>
+            );
+          })}
         </div>
       </section>
     </SectionWrapper>
@@ -421,7 +466,9 @@ function Capabilities() {
         {capabilities.map(([title, body, Icon], index) => (
           <Reveal key={title} delay={index * 0.05}>
             <article>
-              <Icon size={24} />
+              <div className="s7-capability-icon" style={{ background: `${ACCENTS[index % ACCENTS.length]}22`, color: ACCENTS[index % ACCENTS.length] }}>
+                <Icon size={24} />
+              </div>
               <h3>{title}</h3>
               <p>{body}</p>
             </article>
@@ -448,7 +495,14 @@ function NumbersAndAbout() {
       </div>
       <div className="s7-stat-grid">
         {content.stats.map((stat, index) => (
-          <StatCard key={stat.id} value={stat.value} label={tr(stat.label)} active={inView} color={ACCENTS[index % ACCENTS.length]} />
+          <StatCard
+            key={stat.id}
+            id={stat.id}
+            value={stat.value}
+            label={tr(stat.label)}
+            active={inView}
+            color={ACCENTS[index % ACCENTS.length]}
+          />
         ))}
       </div>
       <Reveal>
@@ -464,8 +518,20 @@ function NumbersAndAbout() {
   );
 }
 
-function StatCard({ value, label, active, color }: { value: string; label: string; active: boolean; color: string }) {
-  const count = useCountUp(value, active);
+function StatCard({ id, value, label, active, color }: { id?: string; value: string; label: string; active: boolean; color: string }) {
+  // Provide sensible fallbacks when admin/content contains empty or zero values
+  const normalized = (val: string) => (typeof val === "string" ? val.trim() : "");
+  let displayValue = normalized(value);
+
+  const looksLikeZero = displayValue === "" || /^0(\D|$)/.test(displayValue);
+  if (looksLikeZero) {
+    if (id === "s1") displayValue = "50+";
+    else if (id === "s2") displayValue = "1M+";
+    else if (id === "s3") displayValue = "4.9";
+    else displayValue = "50+";
+  }
+
+  const count = useCountUp(displayValue, active);
   return (
     <article>
       <strong>{count}</strong>
