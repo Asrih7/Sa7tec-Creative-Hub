@@ -1430,3 +1430,92 @@ img {
     transform: translateX(-50%);
   }
 }
+
+/* Public homepage refresh: spacious editorial composition, retaining SA7TEC tokens. */
+.s7-hero {
+  min-height: min(900px, 100svh);
+  padding: clamp(8rem, 13vw, 11rem) clamp(1.25rem, 5vw, 5.5rem) clamp(4.5rem, 8vw, 7rem);
+}
+
+.s7-hero-inner,
+.s7-section-intro,
+.s7-manifesto-grid,
+.s7-service-grid,
+.s7-work-grid,
+.s7-capability-grid,
+.s7-stat-grid,
+.s7-testimonial-grid,
+.s7-about-panel,
+.s7-footer-bottom,
+.s7-numbers-head {
+  max-width: 1280px;
+}
+
+.s7-hero-inner { grid-template-columns: minmax(0, 1.05fr) minmax(380px, .95fr); gap: clamp(2.5rem, 7vw, 7rem); align-items: center; }
+.s7-hero-copygroup { max-width: 690px; }
+.s7-hero-copy h1 { font-size: clamp(3.25rem, 6.2vw, 6.65rem); line-height: .94; letter-spacing: -.065em; text-transform: none; }
+.s7-hero-copy > p { max-width: 56ch; font-size: clamp(1.03rem, 1.45vw, 1.2rem); line-height: 1.65; }
+.s7-kicker, .s7-eyebrow { letter-spacing: .13em; font-size: .72rem; font-weight: 800; }
+.s7-hero-actions { gap: .8rem; flex-wrap: wrap; }
+.s7-button { min-height: 3.35rem; border-radius: .85rem; padding: .85rem 1.2rem; font-weight: 800; }
+.s7-button-primary { box-shadow: 0 14px 30px rgba(34, 211, 238, .18); }
+.s7-hero-visual { max-width: 550px; width: 100%; }
+.s7-visual-card { border-radius: 1.8rem; box-shadow: 0 34px 85px rgba(0,0,0,.22); }
+.s7-hero-strip { border-radius: 1rem; gap: .5rem; padding: .55rem; }
+.s7-hero-strip > div { border-radius: .7rem; }
+
+.s7-section { padding: clamp(5.5rem, 10vw, 9.5rem) clamp(1.25rem, 5vw, 5.5rem); }
+.s7-section-intro { grid-template-columns: minmax(0, 1.15fr) minmax(260px, .65fr); gap: clamp(2rem, 7vw, 7rem); margin-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+.s7-section-intro h2, .s7-numbers-head h2, .s7-footer-cta h2 { font-size: clamp(2.4rem, 4.3vw, 4.4rem); line-height: .98; letter-spacing: -.055em; text-transform: none; max-width: 13ch; }
+.s7-section-intro > p, .s7-section-intro div + p { max-width: 43ch; font-size: 1rem; line-height: 1.75; }
+
+.s7-manifesto-grid { gap: 1.25rem; }
+.s7-manifesto-grid article, .s7-service-card, .s7-capability-grid article, .s7-stat-grid article, .s7-testimonial-grid article, .s7-about-panel, .s7-work-card {
+  border-radius: 1.15rem;
+  border-color: var(--s7-border);
+  box-shadow: 0 12px 34px rgba(0,0,0,.08);
+}
+.s7-manifesto-grid article { min-height: 17.25rem; padding: clamp(1.5rem, 2.7vw, 2.4rem); }
+.s7-manifesto-icon, .s7-service-icon, .s7-capability-icon { border-radius: .85rem; }
+
+.s7-service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.s7-service-card { min-height: 16.5rem; padding: clamp(1.45rem, 2.5vw, 2rem); gap: 1rem; }
+.s7-service-card h3 { font-size: clamp(1.25rem, 1.8vw, 1.55rem); letter-spacing: -.025em; }
+.s7-service-card p { line-height: 1.7; }
+
+.s7-work { background: linear-gradient(180deg, var(--s7-bg-alt), var(--s7-bg)); }
+.s7-work-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; }
+.s7-work-card { border-radius: 1.15rem; }
+.s7-work-media { aspect-ratio: 16 / 9; }
+.s7-work-body { padding: 1.5rem; }
+.s7-work-body h3 { font-size: 1.3rem; letter-spacing: -.02em; }
+
+.s7-capability-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.s7-capability-grid article { min-height: 14.5rem; padding: 1.65rem; }
+.s7-numbers-head { margin: 0 auto 3rem; }
+.s7-stat-grid { gap: 1.25rem; }
+.s7-stat-grid article { min-height: 15.5rem; border-radius: 1.15rem; }
+.s7-stat-grid strong { font-size: clamp(3.25rem, 6vw, 5.5rem); letter-spacing: -.06em; }
+.s7-about-panel { margin-top: 1.25rem; border-radius: 1.15rem; }
+
+.s7-testimonials { padding-top: clamp(4.5rem, 8vw, 7rem); }
+.s7-testimonial-grid { gap: 1.25rem; }
+.s7-testimonial-grid article { min-height: 15rem; border-radius: 1.15rem; }
+.s7-footer { padding: clamp(6rem, 11vw, 10rem) clamp(1.25rem, 5vw, 5.5rem) 2rem; }
+.s7-footer-cta { max-width: 850px; }
+
+@media (max-width: 1180px) {
+  .s7-service-grid, .s7-work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .s7-hero-inner { grid-template-columns: 1fr; }
+  .s7-hero-copygroup { max-width: 100%; }
+  .s7-hero-visual { max-width: 620px; }
+  .s7-section-intro { grid-template-columns: 1fr; gap: 1.25rem; }
+}
+@media (max-width: 680px) {
+  .s7-hero { min-height: auto; padding-top: 7rem; }
+  .s7-hero-copy h1 { font-size: clamp(3rem, 15vw, 4.4rem); }
+  .s7-service-grid, .s7-work-grid, .s7-capability-grid { grid-template-columns: 1fr; }
+  .s7-section-intro h2, .s7-numbers-head h2, .s7-footer-cta h2 { font-size: clamp(2.3rem, 11vw, 3.5rem); }
+}

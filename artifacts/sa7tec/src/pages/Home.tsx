@@ -5,6 +5,10 @@ import {
   BrainCircuit,
   Cloud,
   Code2,
+  Cpu,
+  Database,
+  MonitorSmartphone,
+  PenTool,
   Gamepad2,
   Globe2,
   Instagram,
@@ -55,6 +59,10 @@ const iconMap = {
   Rocket,
 } as const;
 
+// The editor can choose an icon name, but the public feature grid must never
+// repeat a glyph: it makes scanning the offer much harder.
+const serviceIcons = [Gamepad2, Smartphone, Code2, Globe2, Cloud, ShoppingCart, Zap, Palette, Rocket, Cpu, Database, MonitorSmartphone, PenTool];
+
 function useCountUp(value: string, active: boolean) {
   const numeric = Number.parseFloat(value.replace(/[^\d.]/g, ""));
   const suffix = value.replace(/[\d.]/g, "");
@@ -79,6 +87,9 @@ function useCountUp(value: string, active: boolean) {
 
   if (Number.isNaN(numeric)) return value;
   if (!active) return value;
+  // Keep the published value visible until the animation has advanced. This
+  // avoids a misleading flash of "0+", "0M+", or "0.0" on entry.
+  if (count <= 0) return value;
   const formatted = numeric % 1 === 0 ? Math.round(count).toLocaleString() : count.toFixed(1);
   return `${formatted}${suffix}`;
 }
@@ -349,8 +360,8 @@ function ServicesDeepDive() {
         />
 
         <div className="s7-service-grid">
-          {content.services.map((service, index) => {
-            const Icon = iconMap[service.iconName as keyof typeof iconMap] ?? Sparkles;
+          {content.services.filter((service) => tr(service.title).trim() && tr(service.description).trim()).map((service, index) => {
+            const Icon = serviceIcons[index % serviceIcons.length];
             const color = service.color.startsWith("#") ? service.color : ACCENTS[index % ACCENTS.length];
             return (
               <Reveal key={service.id} delay={Math.min(index * 0.04, 0.24)}>
@@ -381,7 +392,9 @@ function ServicesDeepDive() {
 function WorkShowcase() {
   const { t } = useLanguage();
   const { content } = useContent();
-  const mediumProjects = content.portfolioItems.filter((item) => item.linkUrl && item.imageUrl);
+  const mediumProjects = content.portfolioItems.filter(
+    (item) => item.linkUrl && item.imageUrl && sourceText(item.title).trim() && sourceText(item.description).trim(),
+  );
 
   if (!mediumProjects.length) return null;
 
@@ -494,7 +507,7 @@ function NumbersAndAbout() {
         </h2>
       </div>
       <div className="s7-stat-grid">
-        {content.stats.map((stat, index) => (
+        {content.stats.filter((stat) => tr(stat.label).trim()).map((stat, index) => (
           <StatCard
             key={stat.id}
             id={stat.id}
@@ -552,7 +565,7 @@ function Testimonials() {
         <span>SA7TEC / PRODUCT STUDIO / MOBILE / GAMES / AI / SAAS / CUSTOM SOFTWARE / </span>
       </div>
       <div className="s7-testimonial-grid">
-        {content.testimonials.map((item, index) => (
+        {content.testimonials.filter((item) => item.name.trim() && tr(item.quote).trim()).map((item, index) => (
           <Reveal key={item.id} delay={index * 0.08}>
             <article>
               <p>"{tr(item.quote)}"</p>
