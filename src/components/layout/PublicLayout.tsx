@@ -37,6 +37,24 @@ export function PublicLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => setMenuOpen(false), [location]);
 
+  useEffect(() => {
+    if (!menuOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [menuOpen]);
+
   const links = [
     { label: "Services", id: "services" },
     { label: "Process", id: "process" },
@@ -119,10 +137,12 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               >
                 {isDark ? <Sun size={17} /> : <Moon size={17} />}
               </button>
-              <Link href="/contact" className="s7-button s7-button-primary s7-header-cta">
-                {t("cta.start_project")}
-                <ArrowUpRight size={16} />
-              </Link>
+              {location !== "/contact" ? (
+                <Link href="/contact" className="s7-button s7-button-primary s7-header-cta">
+                  {t("cta.start_project")}
+                  <ArrowUpRight size={16} />
+                </Link>
+              ) : null}
             </div>
 
             <div className="s7-mobile-actions mobile-nav">
@@ -170,14 +190,21 @@ export function PublicLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
             <Link href="/blog" className="s7-drawer-link" onClick={() => setMenuOpen(false)}>
-              <span>06</span>
+              <span>04</span>
               <strong>Blog</strong>
               <ArrowUpRight size={18} />
             </Link>
-            <Link href="/contact" className="s7-button s7-button-primary s7-drawer-cta">
-              {t("cta.start_project")}
+            <Link href="/contact" className="s7-drawer-link" onClick={() => setMenuOpen(false)}>
+              <span>05</span>
+              <strong>{t("nav.contact")}</strong>
               <ArrowUpRight size={18} />
             </Link>
+            {location !== "/contact" ? (
+              <Link href="/contact" className="s7-button s7-button-primary s7-drawer-cta" onClick={() => setMenuOpen(false)}>
+                {t("cta.start_project")}
+                <ArrowUpRight size={18} />
+              </Link>
+            ) : null}
           </motion.div>
         ) : null}
       </AnimatePresence>

@@ -1,7 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-@import "./home-2026.css";
+@import "./home-2026.css"; 
 
 @custom-variant dark (&:is(.dark *));
 
@@ -169,6 +169,7 @@
   --s7-cyan-soft: rgba(34, 211, 238, 0.18);
   --s7-slate: #8aa2b8;
   --s7-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
+   --s7-navlink: #ffffff;
 }
 
 [data-theme="light"] {
@@ -192,6 +193,7 @@
   --s7-cyan-soft: rgba(15, 143, 234, 0.14);
   --s7-slate: #475569;
   --s7-shadow: 0 22px 60px rgba(15, 23, 42, 0.12);
+   --s7-navlink: var(--s7-cyan);
 }
 
 *,
@@ -335,7 +337,7 @@ img {
 .s7-menu-link {
   border: 0;
   background: transparent;
-  color: var(--s7-fg-dim);
+  color: var(--s7-navlink);
   cursor: pointer;
   padding: 0.8rem 1rem;
   border-radius: 999px;

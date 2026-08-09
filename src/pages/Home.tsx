@@ -10,7 +10,6 @@ import {
   Layers3,
   Mail,
   MapPin,
-  Menu,
   Palette,
   Rocket,
   ShieldCheck,
@@ -22,7 +21,7 @@ import {
   Workflow,
   Zap,
 } from "lucide-react";
-import { Link , useLocation} from "@/lib/nav";
+import { Link } from "@/lib/nav";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Seo } from "@/components/Seo";
 import { assetSrc } from "@/lib/assets";
@@ -32,7 +31,7 @@ import "@/rebrand.css";
 
 const iconMap = { Smartphone, Code2, Layers3, Zap, Palette, Rocket, Bot, Workflow };
 const accents = ["purple", "pink", "blue", "orange", "green", "violet"];
-const [location, navigate] = useLocation();
+
 function Reveal({
   children,
   delay = 0,
@@ -289,50 +288,35 @@ export default function Home() {
       <Seo
         title="SA7TEC | Digital products for ambitious startups"
         description="SA7TEC is a product studio from Morocco building mobile apps, web platforms, SaaS products and AI experiences for ambitious startups."
+        path="/"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "SA7TEC",
+            url: "https://sa7tec.com/",
+            logo: "https://sa7tec.com/assets/sa7tec-logo.jpg",
+            description:
+              "SA7TEC is a digital product studio building mobile apps, web platforms, SaaS products and AI experiences.",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Tetouan",
+              addressCountry: "MA",
+            },
+            sameAs: [
+              "https://www.linkedin.com/company/sa7tech/",
+              "https://www.instagram.com/sa7_tec/",
+            ],
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "SA7TEC",
+            url: "https://sa7tec.com/",
+          },
+        ]}
       />
       <div className="cb-site">
-        <header className="cb-nav">
-          <div className="cb-container cb-nav-inner">
-     <button
-             onClick={() => {
-               navigate("/");
-               window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 20);
-             }}
-             className="s7-logo-button"
-             aria-label="SA7TEC home"
-           >
-             <img
-               src={assetSrc("/assets/sa7tec-logo.jpg")}
-               alt="SA7TEC"
-               loading="lazy"
-               decoding="async"
-             />
-             <span>SA7TEC</span>
-           </button>
-
-            <nav className="cb-nav-links">
-              <a href="#services">Services</a>
-              <a href="#process">Process</a>
-              <a href="#work">Portfolio</a>
-              <Link href="/blog">Blog</Link>
-              <Link href="/contact">Contact</Link>
-            </nav>
-            <Link href="/contact" className="cb-nav-cta">
-              Get a free quote <ArrowUpRight size={15} />
-            </Link>
-            <button
-              className="cb-menu"
-              aria-label="Open menu"
-              onClick={(event) => {
-                const nav = event.currentTarget.parentElement?.querySelector(".cb-nav-links");
-                nav?.classList.toggle("is-open");
-              }}
-            >
-              <Menu size={20} />
-            </button>
-          </div>
-        </header>
-
         <main>
           <section className="cb-hero">
             <div className="cb-container cb-hero-grid">

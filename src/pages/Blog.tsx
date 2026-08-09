@@ -61,7 +61,7 @@ const posts = [
     date: "14 Mar 2026",
     read: "4 min read",
     image: "/assets/medium-projects/ng-chatbot-angular.gif",
-    href: "https://medium.com/@asrihsoufiane/simplify-angular-development-with-ngchatbotangular-your-chatbot-solution-cbdf87899b01",
+    href: "https://medium.com/@asrihsoufiane/simplify-angular-development-with-ngchatbotangular-your-chatbot-solution-7e4c5f2a6a36",
     excerpt:
       "A practical conversation layer for products that need help to feel available at the right moment.",
   },
@@ -75,6 +75,19 @@ export default function Blog() {
       <Seo
         title="Journal | SA7TEC"
         description="Notes, case studies and product thinking from SA7TEC."
+        path="/blog"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "SA7TEC Journal",
+          url: "https://sa7tec.com/blog",
+          description: "Notes, case studies and product thinking from SA7TEC.",
+          isPartOf: {
+            "@type": "WebSite",
+            name: "SA7TEC",
+            url: "https://sa7tec.com/",
+          },
+        }}
       />
       <main className="s7-journal-page">
         <section className="s7-journal-hero">

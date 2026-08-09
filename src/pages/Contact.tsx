@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -76,6 +76,8 @@ export default function Contact() {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [emailJsReady, setEmailJsReady] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
+  const formStartedAt = useRef(Date.now());
 
   // Initialize EmailJS
   useEffect(() => {
@@ -137,6 +139,11 @@ export default function Contact() {
     setSubmitError(null);
 
     try {
+      // Trap simple bots that fill every field and reject unrealistically fast submits.
+      if (honeypot.trim() || Date.now() - formStartedAt.current < 1500) {
+        throw new Error("Please take a moment to review your message before sending.");
+      }
+
       const safeValues = {
         name: normalizeInput(values.name, 100),
         email: normalizeInput(values.email, 254).toLowerCase(),
@@ -203,6 +210,8 @@ export default function Contact() {
       }
 
       setIsSubmitted(true);
+      setHoneypot("");
+      formStartedAt.current = Date.now();
       toast({
         title: "Email sent",
         description: `Your message was sent to ${content.contactInfo.email}.`,
@@ -710,6 +719,24 @@ export default function Contact() {
                             )}
                           />
                         </div>
+
+                        <input
+                          type="text"
+                          name="website"
+                          value={honeypot}
+                          onChange={(event) => setHoneypot(event.target.value)}
+                          tabIndex={-1}
+                          autoComplete="off"
+                          aria-hidden="true"
+                          style={{
+                            position: "absolute",
+                            left: "-10000px",
+                            width: "1px",
+                            height: "1px",
+                            opacity: 0,
+                            pointerEvents: "none",
+                          }}
+                        />
 
                         <FormField
                           control={form.control}

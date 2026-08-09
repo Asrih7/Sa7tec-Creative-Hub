@@ -73,10 +73,13 @@ export function Seo({
     setMeta("og:image", image, "property");
     setMeta("og:image:alt", title, "property");
     setMeta("og:locale", locale, "property");
+    setMeta("og:site_name", SITE_NAME, "property");
     setMeta("twitter:card", "summary_large_image");
     setMeta("twitter:title", title);
     setMeta("twitter:description", description);
     setMeta("twitter:image", image);
+    setMeta("twitter:url", resolvedCanonical);
+    setMeta("twitter:site", "@sa7tec");
     setLink("canonical", resolvedCanonical);
 
     const existingSchema = document.querySelector('script[data-seo="jsonld"]');
