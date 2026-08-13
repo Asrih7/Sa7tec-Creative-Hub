@@ -1,0 +1,17 @@
+{
+  "name": "SA7TEC",
+  "short_name": "SA7TEC",
+  "description": "A premium digital product studio specializing in mobile apps, games, AI, SaaS, and custom software.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030507",
+  "theme_color": "#030507",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

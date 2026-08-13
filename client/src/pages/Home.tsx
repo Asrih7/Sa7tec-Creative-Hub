@@ -1,11 +1,4 @@
 import { motion } from "framer-motion";
-import heroProductImage from "@/assets/site-images/hero-product.webp";
-import serviceAnalyticsImage from "@/assets/site-images/service-analytics.webp";
-import serviceCollaborationImage from "@/assets/site-images/service-collaboration.webp";
-import serviceCommerceImage from "@/assets/site-images/service-commerce.webp";
-import serviceCreatorImage from "@/assets/site-images/service-creator.webp";
-import serviceHealthImage from "@/assets/site-images/service-health.webp";
-import { stackLogoSvg } from "@/lib/stackLogos";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -112,17 +105,6 @@ function AnimatedStat({ value }: { value: string }) {
   );
 }
 
-const stackLogos = stackLogoSvg;
-
-function StackBrandIcon({ icon, fallback }: { icon: string; fallback: string }) {
-  return (
-    <span className="cb-stack-brand-icon" aria-label={`${fallback} logo`} data-brand={icon}>
-      <span className="cb-stack-svg" aria-hidden="true" dangerouslySetInnerHTML={{ __html: stackLogos[icon] ?? "" }} />
-      <span className="sr-only">{fallback}</span>
-    </span>
-  );
-}
-
 function SectionTitle({
   eyebrow,
   title,
@@ -221,25 +203,51 @@ function ProductPreview() {
   return (
     <div className="cb-product-preview">
       <div className="cb-preview-glow" />
-      <div className="cb-hero-device-card">
-        <div className="cb-hero-device-top">
-          <span className="cb-device-dot" />
-          <span>SA7TEC / PRODUCT STUDIO</span>
+      <div className="cb-phone">
+        <div className="cb-phone-top">
+          <span />
           <span>09:41</span>
+          <span>•••</span>
         </div>
-        <img src={heroProductImage} alt="SA7TEC product dashboard shown on laptop and mobile device" />
-        <div className="cb-hero-device-caption">
+        <div className="cb-phone-heading">
+          <small>SA7TEC / STUDIO</small>
+          <strong>
+            Launch
+            <br />
+            <em>something useful.</em>
+          </strong>
+        </div>
+        <div className="cb-phone-card cb-phone-card-main">
           <span>PRODUCT PULSE</span>
-          <strong>Launch something useful.</strong>
+          <strong>92%</strong>
+          <small>clarity score</small>
+          <div className="cb-bars">
+            <i />
+            <i />
+            <i />
+            <i />
+            <i />
+            <i />
+          </div>
+        </div>
+        <div className="cb-phone-row">
+          <div>
+            <small>ACTIVE USERS</small>
+            <strong>1M+</strong>
+          </div>
+          <div>
+            <small>RATING</small>
+            <strong>4.9</strong>
+          </div>
         </div>
       </div>
       <div className="cb-float cb-float-top">
         <Sparkles size={14} />
-        <span>Real product screens</span>
+        <span>React Native ready</span>
       </div>
       <div className="cb-float cb-float-bottom">
         <Check size={14} />
-        <span>Built to move</span>
+        <span>MVP in 6 weeks</span>
       </div>
     </div>
   );
@@ -257,23 +265,6 @@ export default function Home() {
       label: { en: "Capabilities", fr: "Capacités", ar: "قدرات" },
     },
   ].slice(0, 4);
-  const serviceVisuals = [
-    serviceCommerceImage,
-    serviceHealthImage,
-    serviceAnalyticsImage,
-    serviceCreatorImage,
-    serviceCollaborationImage,
-    heroProductImage,
-  ];
-  const stackItems: Array<[string, string, string]> = [
-    ["Angular", "angular", "An"], ["React", "react", "Re"], ["Node.js", "node", "N"],
-    ["Ionic", "ionic", "Io"], ["Capacitor", "capacitor", "Ca"], ["Android", "android", "An"],
-    ["iOS", "ios", ""], ["API dev", "api", "API"], ["DevOps", "devops", "Do"],
-    ["Jenkins", "jenkins", "Je"], ["AI", "ai", "AI"], ["JavaScript", "javascript", "JS"],
-    ["TypeScript", "typescript", "TS"], ["Bootstrap", "bootstrap", "B"], ["Tailwind", "tailwind", "Tw"],
-    ["Gradle", "gradle", "G"], ["APK", "apk", "Ap"], ["Play Store", "play", "▶"],
-    ["App Store", "appstore", "A"], ["Xcode", "xcode", "Xc"], ["VS Code", "vscode", "<>"]
-  ];
   const advantages = [
     {
       icon: ShieldCheck,
@@ -405,11 +396,8 @@ export default function Home() {
                       delay={index * 0.045}
                       className={`cb-service-card cb-accent-${accents[index % accents.length]}`}
                     >
-                      <div className="cb-service-media">
-                        <img src={serviceVisuals[index % serviceVisuals.length]} alt="" loading="lazy" />
-                        <div className="cb-service-icon">
-                          <Icon size={19} />
-                        </div>
+                      <div className="cb-service-icon">
+                        <Icon size={21} />
                       </div>
                       <span className="cb-service-number">0{index + 1}</span>
                       <h3>{tr(service.title)}</h3>
@@ -420,24 +408,6 @@ export default function Home() {
                     </Reveal>
                   );
                 })}
-              </div>
-            </div>
-          </section>
-
-          <section className="cb-stack-section" id="stack">
-            <div className="cb-container">
-              <Reveal>
-                <SectionTitle eyebrow="Our stack" title={<>The tools behind <em>the momentum.</em></>} body="From first component to app-store release, we use a focused stack that keeps ideas moving and products dependable." />
-              </Reveal>
-            </div>
-            <div className="cb-stack-marquee" aria-label="Technology stack">
-              <div className="cb-stack-track">
-                {[...stackItems, ...stackItems].map(([name, slug, glyph], index) => (
-                  <span className="cb-stack-chip" key={`${name}-${index}`}>
-                    <b><StackBrandIcon icon={slug} fallback={glyph} /></b>
-                    {name}
-                  </span>
-                ))}
               </div>
             </div>
           </section>
